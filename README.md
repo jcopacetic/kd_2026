@@ -37,7 +37,7 @@ Requires Node 22.12+.
       if the option is missing, App passwords may be disabled in the Workspace admin console).
       Optional: `FORM_NOTIFY_TO` to send notifications elsewhere. Until set, forms reply
       "isn't connected yet". Submit one test from each form (audit, website audit, contact).
-- [ ] Cloudflare Turnstile: set `TURNSTILE_SITE_KEY` and `TURNSTILE_SECRET_KEY` in Vercel
+- [x] Cloudflare Turnstile (live 2026-10-04): set `TURNSTILE_SITE_KEY` and `TURNSTILE_SECRET_KEY` in Vercel
       (set both or neither), then redeploy; the site key is read at build time. Widget
       hostnames: khaoticdigital.com, www.khaoticdigital.com, kd-2026.vercel.app.
 - [ ] Parked: store a copy of each submission (Supabase table, decided 2026-10-04 to wait).
