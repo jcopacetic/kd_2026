@@ -33,14 +33,15 @@ export const site = {
 
 export const proof = {
   stats: [
-    { value: '98%', label: 'Job Success' },
+    // Upwork figures cover only the Upwork profile (2015 onward), not all client work.
+    { value: 'Since 2004', label: 'building for the web' },
+    { value: 'Since 2014', label: 'building in HubSpot' },
+    { value: '98%', label: 'Job Success on Upwork' },
     { value: 'Top Rated Plus', label: 'on Upwork' },
-    { value: '$300K+', label: 'delivered' },
-    { value: '265', label: 'projects' },
-    { value: '4,485', label: 'hours billed' },
-    { value: 'Since 2015', label: 'building in HubSpot' },
+    { value: '$300K+', label: 'earned on Upwork alone' },
+    { value: '265', label: 'jobs on Upwork alone' },
   ],
-  badges: ['US-based', 'Veteran-owned', 'GitHub since 2015'],
+  badges: ['US-based', 'GitHub since 2015'],
   testimonials: [
     { quote: 'A spectacular engineer… instantaneous value… hit the ground running on day one.', context: 'AI startup, application portal build' },
     { quote: 'Able to solve a problem that our development team AND the HubSpot support team couldn’t figure out.', context: 'Client review, Upwork' },

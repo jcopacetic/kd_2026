@@ -12,7 +12,7 @@ const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 const list = itemList('/work/', work.map((w) => ({ name: w.data.title, ...(w.data.draft ? {} : { path: `/work/${w.id}/` }) })));
 ---
 <BaseLayout title="Work — Case Studies | Khaotic Digital" description="Selected projects: an AI startup’s application portal, sales and operations systems, CRM integrations, custom themes and platform migrations." crumbs={crumbs} pageTypes={['CollectionPage']} mainEntity={{ '@id': list['@id'] }} schema={[list]}>
-  <PageHero crumbs={crumbs} eyebrow="Work" title="Client work" lede="A selection from 265 projects. Clients are described by type unless they’ve agreed to be named." />
+  <PageHero crumbs={crumbs} eyebrow="Work" title="Client work" lede="A selection of client work from over 20 years. Clients are described by type unless they’ve agreed to be named." />
   <ProofStrip badges={false} />
   <section class="section">
     <div class="container grid grid-2">

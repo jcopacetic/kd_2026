@@ -90,7 +90,7 @@ export function person() {
     familyName: 'Sumner',
     jobTitle: site.person.jobTitle,
     description:
-      'Business systems engineer building RevOps systems, AI in the CRM, and custom apps and integrations. Building in HubSpot since 2015; 265 projects delivered.',
+      'Business systems engineer building RevOps systems, AI in the CRM, and custom apps and integrations. Building for the web since 2004 and in HubSpot since 2014.',
     url: abs('/about/'),
     image: { '@type': 'ImageObject', url: abs('/images/jonathan-sumner.jpg'), width: 800, height: 1000, caption: 'Jonathan Sumner' },
     worksFor: { '@id': ids.org },
