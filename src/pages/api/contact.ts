@@ -9,6 +9,7 @@
 //   TURNSTILE_SECRET_KEY  optional; enables Cloudflare Turnstile verification
 import type { APIRoute } from 'astro';
 import nodemailer, { type Transporter } from 'nodemailer';
+import { GMAIL_USER, GMAIL_APP_PASSWORD, FORM_NOTIFY_TO, TURNSTILE_SECRET_KEY } from 'astro:env/server';
 import { site } from '../../data/site';
 
 export const prerender = false;
@@ -38,7 +39,7 @@ function mailer() {
     host: 'smtp.gmail.com',
     port: 465,
     secure: true,
-    auth: { user: import.meta.env.GMAIL_USER, pass: import.meta.env.GMAIL_APP_PASSWORD },
+    auth: { user: GMAIL_USER, pass: GMAIL_APP_PASSWORD },
     // Fail fast instead of nodemailer's 2-minute defaults, so a stalled SMTP connection
     // doesn't hold the function (and the visitor) open.
     connectionTimeout: 10_000,
@@ -106,7 +107,7 @@ export const POST: APIRoute = async ({ request, clientAddress, redirect, url }) 
   // Link-stuffed messages are the classic contact-form spam.
   if ((fields.message.match(URL_PATTERN) ?? []).length > 3) return dropped('too many links');
 
-  const secret = import.meta.env.TURNSTILE_SECRET_KEY;
+  const secret = TURNSTILE_SECRET_KEY;
   if (secret) {
     const token = str(form.get('cf-turnstile-response'), 4096);
     const verify = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
@@ -119,8 +120,8 @@ export const POST: APIRoute = async ({ request, clientAddress, redirect, url }) 
     if (!verify.success) return fail('Spam check failed. Please try again.');
   }
 
-  const user = import.meta.env.GMAIL_USER;
-  if (!user || !import.meta.env.GMAIL_APP_PASSWORD) {
+  const user = GMAIL_USER;
+  if (!user || !GMAIL_APP_PASSWORD) {
     console.error('contact: GMAIL_USER / GMAIL_APP_PASSWORD not set');
     return fail('The form isn’t connected yet.', 503);
   }
@@ -147,7 +148,7 @@ export const POST: APIRoute = async ({ request, clientAddress, redirect, url }) 
   try {
     await mailer().sendMail({
       from: { name: `${site.name} website`, address: user },
-      to: import.meta.env.FORM_NOTIFY_TO || user,
+      to: FORM_NOTIFY_TO || user,
       replyTo: { name, address: fields.email },
       subject: `${label}: ${name}${fields.company ? ` (${fields.company})` : ''}`,
       text,

@@ -1,5 +1,5 @@
 // @ts-check
-import { defineConfig } from 'astro/config';
+import { defineConfig, envField } from 'astro/config';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import vercel from '@astrojs/vercel';
@@ -39,6 +39,16 @@ export default defineConfig({
       },
     }),
   ],
+  // Server secrets for the contact form. `access: 'secret'` means they're read from the
+  // environment at request time and never compiled into the bundle (import.meta.env would be).
+  env: {
+    schema: {
+      GMAIL_USER: envField.string({ context: 'server', access: 'secret', optional: true }),
+      GMAIL_APP_PASSWORD: envField.string({ context: 'server', access: 'secret', optional: true }),
+      FORM_NOTIFY_TO: envField.string({ context: 'server', access: 'secret', optional: true }),
+      TURNSTILE_SECRET_KEY: envField.string({ context: 'server', access: 'secret', optional: true }),
+    },
+  },
   // Content-Security-Policy. Astro hashes every script and stylesheet it renders and emits a
   // <meta http-equiv> CSP per page, so no 'unsafe-inline' for scripts. Third parties allowed:
   // GA4 (loaded only after consent) and Cloudflare Turnstile (only if a site key is set).
