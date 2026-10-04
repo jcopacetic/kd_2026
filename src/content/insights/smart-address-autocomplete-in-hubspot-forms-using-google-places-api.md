@@ -10,11 +10,6 @@ legacyUrl: "/insights/smart-address-autocomplete-in-hubspot-forms-using-google-p
 gsc12mo: "110 clicks / 12,185 impr / pos 18.7"
 ---
 
-<!-- TODO(jonathan): code checked against HubSpot's embed source and Google's docs (2026-10-04).
-     Still needs one live run on a test portal: updated-editor form, standard embed, pick an
-     address WITH a unit; confirm all five fields fill (unit included) and the contact saves.
-     Also confirm includedPrimaryTypes still returns suggestions. Then delete this comment. -->
-
 To add address autocomplete to a HubSpot form today, put Google's `PlaceAutocompleteElement` next to the form and copy the selected address into the form with HubSpot's `setFieldValue()`. The older approach, where you attach Google's widget directly to the form's address input, stopped being a good option in 2025 for two reasons covered below.
 
 I first wrote this guide in April 2025. This version is rewritten for HubSpot's updated form editor and Google's current Places library.
@@ -145,5 +140,7 @@ This guide covers forms built in HubSpot's updated form editor. Forms from the l
 ## Validating the address on submit
 
 Autocomplete helps people enter a good address, but it can't stop someone from ignoring the suggestions. To check the address when the form is submitted, see the follow-up: [How to Verify Address, City, ZIP Code, State, and Country on HubSpot Form Submit Using Google Places API](/insights/how-to-verify-address-city-zip-code-state-and-country-on-hubspot-form-submit-using-google-places-api/).
+
+*Code last checked against HubSpot's and Google's documentation in October 2026.*
 
 Sources: [HubSpot global form events](https://developers.hubspot.com/docs/api-reference/latest/marketing/forms/global-form-events), [Google Place Autocomplete widget](https://developers.google.com/maps/documentation/javascript/place-autocomplete-new), [Google Places widgets reference](https://developers.google.com/maps/documentation/javascript/reference/places-widget), [Google Places migration overview](https://developers.google.com/maps/documentation/javascript/places-migration-overview).

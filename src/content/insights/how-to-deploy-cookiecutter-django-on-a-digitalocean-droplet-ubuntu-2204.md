@@ -10,10 +10,6 @@ legacyUrl: "/insights/how-to-deploy-cookiecutter-django-on-a-digitalocean-drople
 gsc12mo: "31 clicks / 3,715 impr / pos 11.8"
 ---
 
-<!-- TODO(jonathan): commands checked against the template (2026-10-04) and the systemd unit
-     passes systemd-analyze verify. Optional before publishing: one real run on a fresh 24.04
-     droplet, ideally including a reboot (step 9) and a restore (step 10). Then delete this comment. -->
-
 To deploy a [Cookiecutter Django](https://github.com/cookiecutter/cookiecutter-django) project on a DigitalOcean droplet, you harden a fresh Ubuntu server, open ports 22, 80 and 443, install Docker, copy your project and its production `.env` files onto the server, and start `docker-compose.production.yml`. Traefik, which ships with the template, gets the HTTPS certificate from Let's Encrypt on its own.
 
 This is the order I use for a first production deploy, including the parts that tend to cause problems later: the firewall, backups, and getting the app to come back after a reboot.
@@ -202,5 +198,7 @@ Create migrations on your own machine and commit them. Running `makemigrations` 
 - **Site down after a reboot:** step 9.
 
 For local development with the same stack, see my longer guide on [web application development in Django and Docker](/insights/web-application-development-in-django-and-docker/).
+
+*Commands last checked against the current Cookiecutter Django template and Docker's and Ubuntu's documentation in October 2026.*
 
 Sources: [Cookiecutter Django: deployment with Docker](https://cookiecutter-django.readthedocs.io/en/latest/3-deployment/deployment-with-docker.html), [Cookiecutter Django template](https://github.com/cookiecutter/cookiecutter-django), [Docker on Ubuntu](https://docs.docker.com/engine/install/ubuntu/), [DigitalOcean: Initial server setup with Ubuntu](https://www.digitalocean.com/community/tutorials/initial-server-setup-with-ubuntu).

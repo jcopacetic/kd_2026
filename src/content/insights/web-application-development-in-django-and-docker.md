@@ -340,3 +340,5 @@ Two things I learned the hard way:
 **Migrations only come from your machine.** The release flow is: build and test locally, run `makemigrations` locally, commit, push, then on the server `git pull` and `docker compose -f docker-compose.production.yml up --build -d`, followed by `migrate`. There's no need to take the site down first, so you avoid downtime. Never run `makemigrations` on the server. It creates migration files that exist nowhere else, the next deploy conflicts with them, and untangling that can mean editing the database by hand. I've spent hours on it, and it's an easy way to wreck a database.
 
 The template's [production docs](https://cookiecutter-django.readthedocs.io/en/latest/3-deployment/deployment-with-docker.html) and its options for cloud storage (S3, Google Cloud, Azure) cover the rest when you need it.
+
+*Every command and code sample was last run against the current Cookiecutter Django template in October 2026.*

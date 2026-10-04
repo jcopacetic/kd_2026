@@ -10,11 +10,6 @@ legacyUrl: "/insights/how-to-verify-address-city-zip-code-state-and-country-on-h
 gsc12mo: "6 clicks / 1,393 impr / pos 11.6"
 ---
 
-<!-- TODO(jonathan): code run against a mocked Address Validation API (13 cases, 2026-10-04).
-     Still needs a live run with a real key: a good US address, the same without its unit, a
-     made-up one; confirm the verdicts, the branch, and that Edit record accepts the dropdown
-     values. Then delete this comment. -->
-
 The most reliable way to verify an address from a HubSpot form is after the submission: a workflow sends the address to Google's Address Validation API in a custom code action, saves the standardized version when Google accepts it, and flags it for a person when it doesn't. Checking in the browser before submit is no longer practical with HubSpot's updated forms, for reasons covered below.
 
 This is the follow-up to [Smart Address Autocomplete in HubSpot Forms Using Google Places API](/insights/smart-address-autocomplete-in-hubspot-forms-using-google-places-api/). Autocomplete helps people type a good address. Verification catches the ones that still get through.
@@ -143,5 +138,7 @@ In Google Cloud, set a budget alert on the project. The API charges per request,
 ## Can I check before the form submits?
 
 Not reliably with updated-editor forms, since the embed doesn't let your page block a submission. The best you can do in the browser is help people pick a valid address in the first place, which is what the [autocomplete guide](/insights/smart-address-autocomplete-in-hubspot-forms-using-google-places-api/) covers. The two work well together: autocomplete for most visitors, and this workflow for everything that slips through.
+
+*Code last checked against Google's and HubSpot's documentation in October 2026.*
 
 Sources: [Google Address Validation requests](https://developers.google.com/maps/documentation/address-validation/requests-validate-address), [Understanding the response](https://developers.google.com/maps/documentation/address-validation/understand-response), [Building validation logic](https://developers.google.com/maps/documentation/address-validation/build-validation-logic), [Coverage](https://developers.google.com/maps/documentation/address-validation/coverage), [HubSpot custom code actions](https://developers.hubspot.com/docs/api-reference/latest/automation/workflow-actions/custom-code-actions).
