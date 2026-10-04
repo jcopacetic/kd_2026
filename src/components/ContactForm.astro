@@ -60,6 +60,8 @@ const messageLabel = {
       try {
         const res = await fetch(form.action, { method: 'POST', body: new FormData(form), headers: { Accept: 'application/json' } });
         const data = await res.json().catch(() => ({}));
+        // 429 comes from the Vercel Firewall rate limit (5 posts / 10 min per IP), not from our API.
+        if (res.status === 429) throw new Error('That’s a lot of messages in a short time. Please wait 10 minutes and try again.');
         if (!res.ok) throw new Error(data.error || 'Something went wrong.');
         status.dataset.state = 'ok';
         status.textContent = 'Thanks, I’ve got it. I’ll be in touch soon.';
@@ -68,7 +70,8 @@ const messageLabel = {
         (window as any).kdTrack?.(intent === 'contact' ? 'contact_submitted' : 'audit_booked', { intent });
       } catch (err) {
         status.dataset.state = 'error';
-        status.textContent = `${(err as Error).message} Please try again in a few minutes.`;
+        const message = (err as Error).message;
+        status.textContent = /try again\.$/.test(message) ? message : `${message} Please try again in a few minutes.`;
       } finally {
         button.disabled = false;
       }

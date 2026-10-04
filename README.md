@@ -81,8 +81,7 @@ Requires Node 22.12+.
       enable a blanket "AI bots" managed rule; it would also block the AI search bots we allow.
 - [ ] GA4: create the AI-referrer channel group (`site-content/04`); mark `audit_booked`
       and `contact_submitted` as key events.
-- [ ] Vercel → Firewall: add a rate limit on `/api/contact/` (e.g. 5 requests / 10 min per IP →
-      Deny). Serverless functions can't hold a reliable counter themselves.
+- [x] Vercel → Firewall: "Rate limit contact form" — POST `/api/contact*`, 5 per IP per 10 min → 429.
 - [ ] After a few weeks on HTTPS with no problems: add `; preload` to the HSTS header in
       `vercel.json` and submit at hstspreload.org (hard to undo, so not on day one).
 - [ ] Prune dead subdomains (`shop.`, `services.`, `tonic.`, `connect.`, `cdn-0.`).
