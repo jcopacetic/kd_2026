@@ -76,9 +76,15 @@ Requires Node 22.12+.
       redirects: `/get-in-touch/`, `/frequently-asked-questions/`, `/resources/<slug>/`,
       `/kd-insights/<anything>`.
 - [ ] Search Console: verify, submit `/sitemap-index.xml`; add Bing Webmaster.
-- [ ] Optional hard block: robots.txt is only a request. In Vercel → Firewall, add a custom rule
-      "User-Agent contains any of" the BLOCK list in `src/pages/robots.txt.ts` → Deny. Don't
-      enable a blanket "AI bots" managed rule; it would also block the AI search bots we allow.
+- [x] Vercel Firewall (staged 2026-10-04; `vercel firewall rules list --expand` to review):
+      1. Block exploit probes (wp-*, .env, .git, *.php …) → deny
+      2. Allow only expected methods (GET/HEAD/OPTIONS; POST only to /api/contact) → deny
+      3. Block AI training, SEO-tool and scraper bots (robots.txt BLOCK list) → deny.
+         Keep it in sync with `src/pages/robots.txt.ts`. Don't enable the managed "AI Bots"
+         rule; it would also block the AI search bots we allow.
+      4. Rate limit contact form (5 POSTs / 10 min per IP) → 429
+      Bot Protection (managed) is in Log mode; after a couple of weeks of traffic, review it
+      and consider switching to Challenge.
 - [ ] GA4: create the AI-referrer channel group (`site-content/04`); mark `audit_booked`
       and `contact_submitted` as key events.
 - [x] Vercel → Firewall: "Rate limit contact form" — POST `/api/contact*`, 5 per IP per 10 min → 429.
