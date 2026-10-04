@@ -42,9 +42,9 @@ Requires Node 22.12+.
       hostnames: khaoticdigital.com, www.khaoticdigital.com, kd-2026.vercel.app.
 - [ ] Parked: store a copy of each submission (Supabase table, decided 2026-10-04 to wait).
       The email is currently the only record.
-- [ ] Confirm in `site.ts`: GitHub handle, reply-time promise, `$150/hr` hourly floor; add
+- [x] Confirmed 2026-10-04: GitHub handle jcopacetic, "one business day" replies, $150/hr floor. Still optional: add
       the Calendly link if you want a "book a fit call" button.
-- [ ] Headshot (About page + `Person` schema image).
+- [x] Headshot (About page, home trust section, About share card, `Person` schema image).
 - [ ] Write up 4–6 case studies (`src/content/work/*.md`): permission to name, problem →
       what I built → outcome; flip `draft: false`.
 - [ ] Review the provisional icons `src/assets/icons/ai-crm.svg` and `audit.svg` (drawn to
@@ -55,23 +55,20 @@ Requires Node 22.12+.
 
 **Content**
 - [x] Rewrite the Places autocomplete post for HubSpot's new form editor (done 2026-10-04).
-- [ ] Test that post's final code snippet on a portal (updated-editor form, standard embed), then remove the TODO comment at its top.
 - [x] Rewrite the address verification post (Address Validation API + workflow custom code; done 2026-10-04).
-- [ ] Test its custom code action on three test addresses (see the TODO comment at its top), then remove the comment.
 - [x] Rewrite the Cookiecutter Django deploy post (done 2026-10-04).
-- [ ] Walk through it once on a fresh droplet (see its TODO comment), then remove the comment.
 - [x] Rewrite "Aligning Buyer Personas…" (tables rebuilt as HTML, full-size diagram, unsourced stats removed; done 2026-10-04).
 - [x] `/seamless-integration-*` → `/services/build/` (prefix rule in `vercel.json`).
 - [x] Content strategy guide: kept, updated for AI search and rewritten as a how-to (done 2026-10-04).
 - [x] "Building Buyer-Centric Marketing Campaigns": refocused on campaigns, current diagram, HubSpot campaigns tool facts checked (done 2026-10-04).
 - [x] Facebook lead ads post: Quo rename, real templates, pre-filled Calendly links, A2P 10DLC/TCPA section (done 2026-10-04).
-- [ ] Run one test lead through the Zap it describes (see its TODO comment), then remove the comment.
+- [x] Technical posts checked against current docs, and the Django & Docker guide run end to end; test TODOs replaced with "last checked" notes (2026-10-04).
+- [x] Five new deadline posts (2026-09 write validation, private apps, CRM cards, Pipelines v1, OAuth v1; 2026-10-04).
 - [x] Remaining posts rewritten (pipelines guide, Django & Docker, brand colors, online presence, HubSpot themes, image optimization; done 2026-10-04). All 13 migrated posts now updated.
-- [ ] Test the Django & Docker guide's commands on a fresh project (see its TODO comment).
 - [ ] Optional: re-run the image-format comparison with your own image and add it to the image optimization post (the old Mario still was removed as copyrighted material).
 
 **Deploy**
-- [ ] Vercel project → root directory `site/`; add `khaoticdigital.com` + `www` (www → apex).
+- [x] Vercel project `kd-2026` (repo root is `site/`); `khaoticdigital.com` + `www` added 2026-10-04 (www → apex via `vercel.json`). DNS switch at DigitalOcean pending.
 - [ ] On the first preview deploy, confirm `vercel.json` headers apply and spot-check
       redirects: `/get-in-touch/`, `/frequently-asked-questions/`, `/resources/<slug>/`,
       `/kd-insights/<anything>`.

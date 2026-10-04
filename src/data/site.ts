@@ -15,13 +15,12 @@ export const site = {
   tagline: 'I build the RevOps and AI systems that configurators can’t.',
   links: {
     upwork: 'https://www.upwork.com/freelancers/jonathansumner2',
-    // TODO(jonathan): confirm handle — the planner lists GitHub profile "jcopacetic".
     github: 'https://github.com/jcopacetic',
     linkedinCompany: 'https://www.linkedin.com/company/khaotic-digital',
     /** X handle for twitter:site, e.g. '@khaoticdigital'. Empty until the account is active again. */
     x: '',
   },
-  /** TODO(jonathan): confirm the response-time promise used on forms and CTAs. */
+  /** Response-time promise on forms and CTAs (confirmed 2026-10-04). */
   replyTime: 'one business day',
   /** Leave empty until the booking link exists; CTAs then fall back to /contact/. */
   calendlyUrl: '',
