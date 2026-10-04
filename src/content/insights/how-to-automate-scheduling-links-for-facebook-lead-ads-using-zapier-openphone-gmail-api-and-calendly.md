@@ -10,15 +10,12 @@ legacyUrl: "/insights/how-to-automate-scheduling-links-for-facebook-lead-ads-usi
 gsc12mo: "0 clicks / 94 impr / pos 34.2"
 ---
 
-<!-- TODO(jonathan): run one test lead through the finished Zap (Meta's Lead Ads Testing Tool)
-     and confirm the text, the email and the pre-filled Calendly page. Then delete this comment. -->
-
 To get Facebook leads booked without anyone chasing them, build a Zap that fires on each new Lead Ads submission, then texts and emails the lead a Calendly link with their name and email already filled in. Leads get the link while they're still thinking about you, and the booking form takes them seconds. If you text leads in the US, you also need their consent on the form and a registered business number, covered below.
 
 I first built this for a travel agency client running Facebook lead ads. The pieces:
 
 - **Facebook Lead Ads** (Meta instant forms) to capture the lead
-- **Zapier** to connect everything
+- **Zapier** to connect everything. Facebook Lead Ads is one of Zapier's premium apps, so it needs a paid plan.
 - **Quo**, the business phone app formerly called OpenPhone, to send the text
 - **Gmail** to send the email
 - **Calendly** for booking
@@ -29,10 +26,10 @@ In Meta Ads Manager, create a campaign with the **Leads** objective and choose *
 
 In the form:
 
-- Ask for **full name**, **email** and **phone number**. Meta can pre-fill these from the person's profile, which keeps the form quick.
+- Ask for **first name**, **last name**, **email** and **phone number**. Meta can pre-fill all four from the person's profile, which keeps the form quick. Separate name fields matter later: the messages greet people by first name.
 - Add one or two qualifying questions if they'll change what happens next, such as which service they're interested in.
 - Add your **privacy policy** link.
-- If you'll text the lead, add a **custom disclaimer** with a consent checkbox that says they agree to receive texts from your business about their inquiry. Keep a record of that consent; more on why below.
+- If you'll text the lead, add a **custom disclaimer** with a consent checkbox that says they agree to receive texts from your business about their inquiry, and keep a record of that consent (more on why below). Also add a short multiple-choice question, such as "OK to text you about your inquiry?" with Yes and No. Meta stores disclaimer checkbox answers separately from the other form answers, and integrations don't always receive them, so the question is what the Zap filters on later.
 - Set the **completion screen** to tell them a booking link is on its way by text and email.
 
 ## Step 2: Start the Zap with new leads
@@ -43,17 +40,23 @@ In Zapier, create a Zap:
 - **Trigger event:** New Lead
 - Connect the Facebook account that manages the Page, then choose the **Page** and the **form**.
 
-Submit a test lead with Meta's [Lead Ads Testing Tool](https://developers.facebook.com/tools/lead-ads-testing/) and pull it into Zapier, so you have real field values to map in the next steps.
+Submit a test lead with Meta's [Lead Ads Testing Tool](https://developers.facebook.com/tools/lead-ads-testing/), then go straight back to Zapier and click **Test trigger**, so you have real field values to map in the next steps. The tool keeps one test lead per form: click **Delete lead** before you create another. In test records, answers to your own questions can show up as numbered fields, so check which is which.
+
+Before you switch the Zap on, give Zapier access to live leads. In Meta Business Suite, open **Settings → Integrations → Leads Access** for your Page and make sure the app named **Zapier** has CRM access. (A separate app called "Zapier Inc." also appears there; it isn't the one that matters.) Without this, test leads work during setup but real leads never trigger the Zap.
+
+If you edit the form later, Meta gives it a new ID and the Zap keeps watching the old one. Reselect the form in the trigger after every edit.
 
 ## Step 3: Build a personal Calendly link
 
-Calendly can pre-fill its booking form from the link itself. Add `name` and `email` to your event link, and the lead only has to pick a time:
+Calendly can pre-fill its booking form from the link itself. Add the name and email to your event link, and the lead only has to pick a time:
 
 ```text
 https://calendly.com/yourname/intro-call?name=Jane%20Smith&email=jane%40example.com
 ```
 
-Names and emails contain spaces and symbols, so encode them first. Add a **Formatter by Zapier** step (**Text → URL Encode**) for the name, and another for the email. Then build the link in your messages from your Calendly event link plus the two encoded values. If you added a qualifying question to the form, you can pass its answer to a matching Calendly question with `a1`.
+If your Calendly event asks for first and last name separately, use `first_name` and `last_name` instead of `name`.
+
+Names and emails contain spaces and symbols, so encode them first. Add a **Formatter by Zapier** step (**Text → URL Encode**) for each value: the name (or first and last name) and the email. Then build the link in your messages from your Calendly event link plus the encoded values. If you added a qualifying question to the form, you can pass its answer to a matching Calendly question with `a1`.
 
 ## Step 4: Text the link with Quo
 
@@ -104,7 +107,7 @@ Add a step that creates or updates the contact in your CRM (HubSpot, Pipedrive o
 
 ## Optional refinements
 
-- **Filter:** only send the text if a phone number came through, and only if the consent box was ticked.
+- **Filter:** only send the text if a phone number came through and the "OK to text you?" answer is Yes. If you'd rather filter on the disclaimer checkbox itself, first confirm its answer appears in your Zap's test record.
 - **Paths:** send a different Calendly event depending on a form answer, such as one link per service.
 - **Business hours:** a text at 3 a.m. feels like spam. Use **Delay by Zapier → Delay Until** to hold texts until morning, and send the email immediately.
 - **Team alert:** post each new lead to Slack so someone can follow up personally if they don't book within a day.
@@ -117,7 +120,7 @@ Add a step that creates or updates the contact in your CRM (HubSpot, Pipedrive o
 
 ## Testing it
 
-1. Submit a lead with the Lead Ads Testing Tool, using your own phone number and email.
+1. Turn the Zap on, then submit a lead with the Lead Ads Testing Tool using your own phone number and email. Because the Zap is live, this also proves the Leads Access setting works.
 2. Check that the text arrives from your Quo number with a working link.
 3. Check that the email arrives and lands in your main inbox.
 4. Open the link and confirm your name and email are already filled in on the Calendly page.
@@ -131,4 +134,6 @@ Add a step that creates or updates the contact in your CRM (HubSpot, Pipedrive o
 4. Quo texts the link and Gmail emails it.
 5. The lead lands in your CRM, and the booking shows up when they schedule.
 
-Sources: [Calendly: pre-fill invitee information](https://help.calendly.com/hc/en-us/articles/226766767-Pre-populate-invitee-information-on-the-scheduling-page), [Zapier: getting started with Quo](https://help.zapier.com/hc/en-us/articles/39931472609677-How-to-get-started-with-Quo-formerly-OpenPhone-on-Zapier), [Quo: A2P 10DLC registration](https://www.quo.com/blog/what-is-a2p-10dlc/), [Meta Lead Ads Testing Tool](https://developers.facebook.com/tools/lead-ads-testing/).
+*Steps last checked against Zapier's, Meta's and Calendly's documentation in October 2026.*
+
+Sources: [Calendly: pre-fill invitee information](https://calendly.com/help/how-to-pre-fill-invitee-information-in-your-calendly-link), [Zapier: getting started with Quo](https://help.zapier.com/hc/en-us/articles/39931472609677-How-to-get-started-with-Quo-formerly-OpenPhone-on-Zapier), [Quo: A2P 10DLC registration](https://www.quo.com/blog/what-is-a2p-10dlc/), [Meta Lead Ads Testing Tool](https://developers.facebook.com/tools/lead-ads-testing/), [Zapier: getting started with Facebook Lead Ads](https://help.zapier.com/hc/en-us/articles/8496061306253-How-to-get-started-with-Facebook-Lead-Ads-on-Zapier), [Zapier: Facebook Lead Ads Zap not triggering](https://help.zapier.com/hc/en-us/articles/25377944537997-Facebook-Lead-Ads-Zap-not-triggering), [Meta: retrieving leads](https://developers.facebook.com/docs/marketing-api/guides/lead-ads/retrieving).
