@@ -61,7 +61,7 @@ Requires Node 22.12+.
 - [x] Rewrite the Cookiecutter Django deploy post (done 2026-10-04).
 - [ ] Walk through it once on a fresh droplet (see its TODO comment), then remove the comment.
 - [x] Rewrite "Aligning Buyer Personas…" (tables rebuilt as HTML, full-size diagram, unsourced stats removed; done 2026-10-04).
-- [ ] Pull the full legacy URL for `/seamless-integration-…` from Search Console and add a rule.
+- [x] `/seamless-integration-*` → `/services/build/` (prefix rule in `vercel.json`).
 - [x] Content strategy guide: kept, updated for AI search and rewritten as a how-to (done 2026-10-04).
 - [x] "Building Buyer-Centric Marketing Campaigns": refocused on campaigns, current diagram, HubSpot campaigns tool facts checked (done 2026-10-04).
 - [x] Facebook lead ads post: Quo rename, real templates, pre-filled Calendly links, A2P 10DLC/TCPA section (done 2026-10-04).

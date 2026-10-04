@@ -92,7 +92,7 @@ export default defineConfig({
     '/resources/': r('/insights/'),
     '/resources/[slug]': r('/insights/[slug]'),
     // /kd-insights/* is handled by src/pages/kd-insights/[...rest].ts (prefix matching).
-    // TODO: "/seamless-integration-…" legacy URL is truncated in the audit — add an exact rule from Search Console.
+    // /seamless-integration-* (legacy, truncated in the audit) → /services/build/ is a prefix rule in vercel.json.
     '/profile/u/jcopacetic/': r('/about/'),
     '/search/contractors/': r('/'),
   },
