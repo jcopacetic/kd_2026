@@ -86,7 +86,7 @@ These need a project-based app, built with the HubSpot CLI. HubSpot's migration 
 4. Upload with `hs project upload`, install the app, and copy its access token from the app's settings.
 5. Point your service at the new token and your webhook endpoint at the new subscriptions. Run both apps side by side until you've seen the new one deliver events, then delete the legacy app.
 
-If the legacy app also renders a **classic CRM card**, that's on a shorter clock: classic cards stop rendering on October 31, 2026, so move the card first.
+If the legacy app also renders a **classic CRM card**, that's on a shorter clock: classic cards stop rendering on October 31, 2026, so move the card first. I've written up [migrating a classic CRM card to an app card](/insights/migrate-hubspot-classic-crm-card-to-app-card/) separately.
 
 ## What to do this month
 
