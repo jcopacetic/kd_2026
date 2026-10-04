@@ -1,0 +1,13 @@
+---
+// Horizontal lockup, inlined (no extra request). Swaps to the reversed lockup on dark
+// surfaces via .logo-light / .logo-dark rules in global.css.
+import light from '../assets/logo/khaotic-logo-horizontal.svg?raw';
+import dark from '../assets/logo/khaotic-logo-horizontal-reversed.svg?raw';
+const strip = (s: string) =>
+  s
+    .replace(/<\?xml[^>]*\?>/, '')
+    .replace(/\s(id|aria-label)="[^"]*"/g, '')
+    .replace('<svg', '<svg aria-hidden="true" focusable="false"');
+---
+<span class="logo-light" set:html={strip(light)} />
+<span class="logo-dark" set:html={strip(dark)} />

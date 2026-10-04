@@ -1,0 +1,54 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import ProofStrip from '../components/ProofStrip.astro';
+import Testimonials from '../components/Testimonials.astro';
+import AuditCTA from '../components/AuditCTA.astro';
+import { site } from '../data/site';
+import { ids } from '../lib/schema';
+import { Image } from 'astro:assets';
+import portrait from '../assets/photos/jonathan-sumner-about-portrait.png';
+const crumbs = [{ name: 'Home', path: '/' }, { name: 'About', path: '/about/' }];
+---
+<BaseLayout
+  title="About Jonathan Sumner | Khaotic Digital"
+  description="Jonathan Sumner, business systems engineer: 20+ years building, in HubSpot since 2015, 265 projects delivered. US-based and veteran-owned."
+  crumbs={crumbs}
+  pageTypes={['AboutPage', 'ProfilePage']}
+  mainEntity={{ '@id': ids.person }}
+>
+  <PageHero crumbs={crumbs} eyebrow="About" title="I’m a developer, not a salesperson." lede="Khaotic Digital is me, Jonathan Sumner. I’m a business systems engineer, and the person you talk to is the person who writes the code." />
+
+  <section class="section">
+    <div class="container split">
+      <div class="stack">
+        <span class="eyebrow">The short version</span>
+        <h2>Twenty years of building. One engineer.</h2>
+        <figure class="portrait">
+          <Image src={portrait} alt="Jonathan Sumner, arms crossed, in a blue shirt" widths={[400, 600, 900, 1200]} sizes="(min-width: 56rem) 480px, calc(100vw - 2rem)" loading="eager" fetchpriority="high" />
+        </figure>
+      </div>
+      <div class="stack">
+        <p>I’ve been building websites and the systems behind them for more than 20 years, and working in the HubSpot ecosystem since 2015. I’ve published code on GitHub since 2015 too, which is the easiest way to check my work.</p>
+        <p>I used to run a HubSpot partner agency. I left the partner program because that model fits sales-led agencies, and I’m an engineer. Now there are no account managers or offshore hand-offs, and you don’t wait days for an answer. You get it from the person doing the work.</p>
+        <p>Today I build revenue systems: the CRM and pipeline architecture, the integrations between tools, AI that works on customer data, and the custom apps that pick up where platforms stop. HubSpot is the platform I know deepest; Python, Django and Next.js are what I reach for when it runs out of road.</p>
+        <p>I’m a US-based military veteran, and I run Khaotic Digital from Amarillo, Texas.</p>
+      </div>
+    </div>
+  </section>
+
+  <ProofStrip />
+
+  <section class="section surface" aria-labelledby="oss-h">
+    <div class="container split">
+      <div><span class="eyebrow">Open source</span><h2 id="oss-h">Proof you can read.</h2></div>
+      <div class="stack">
+        <p><strong>Reely</strong> is my open-source CSS framework for HubSpot custom modules, shared with the HubSpot developer community.</p>
+        <p>More of my work is on <a href={site.links.github}>GitHub</a>, and my client record is on <a href={site.links.upwork}>Upwork</a>.</p>
+      </div>
+    </div>
+  </section>
+
+  <Testimonials count={6} />
+  <AuditCTA heading="Want a second opinion on your stack?" />
+</BaseLayout>

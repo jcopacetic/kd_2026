@@ -1,0 +1,13 @@
+---
+import { proof } from '../data/site';
+interface Props { badges?: boolean }
+const { badges = true } = Astro.props;
+---
+<section class="proof-strip" aria-label="Track record">
+  <div class="container">
+    <dl>
+      {proof.stats.map((s) => <div><dt>{s.label}</dt><dd>{s.value}</dd></div>)}
+    </dl>
+    {badges && <ul class="badges">{proof.badges.map((b) => <li>{b}</li>)}</ul>}
+  </div>
+</section>

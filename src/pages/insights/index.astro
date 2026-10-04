@@ -1,0 +1,27 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import AuditCTA from '../../components/AuditCTA.astro';
+import { pillarLabel } from '../../data/site';
+import { blog, itemList, ids } from '../../lib/schema';
+const crumbs = [{ name: 'Home', path: '/' }, { name: 'Insights', path: '/insights/' }];
+const posts = (await getCollection('insights', ({ data }) => !data.draft)).sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+const list = itemList('/insights/', posts.map((p) => ({ name: p.data.title, path: `/insights/${p.id}/`, id: ids.article(`/insights/${p.id}/`) })));
+const fmt = (d: Date) => d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric', timeZone: 'UTC' });
+---
+<BaseLayout title="Insights — RevOps, AI & Engineering Notes | Khaotic Digital" description="Technical tutorials and frameworks from client work: CRM integrations, forms and APIs, Django deployments, pipelines and RevOps." crumbs={crumbs} pageTypes={['CollectionPage']} about={ids.blog} mainEntity={{ '@id': list['@id'] }} schema={[blog(), list]}>
+  <PageHero crumbs={crumbs} eyebrow="Insights" title="Notes from client work" lede="Tutorials, frameworks and fixes for problems clients bring me, with the code where there is some." />
+  <section class="section">
+    <div class="container grid grid-2">
+      {posts.map((p) => (
+        <article class="card card-link">
+          <span class="meta">{p.data.kind === 'guide' ? 'Guide' : 'Post'} · {pillarLabel[p.data.pillar]} · <time datetime={p.data.pubDate.toISOString()}>{fmt(p.data.pubDate)}</time></span>
+          <h2 style="font-size:var(--kd-step-2);margin:0"><a class="stretched" href={`/insights/${p.id}/`} style="color:inherit;text-decoration:none">{p.data.title}</a></h2>
+          <p>{p.data.description}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+  <AuditCTA />
+</BaseLayout>

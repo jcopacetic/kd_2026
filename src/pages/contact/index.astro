@@ -1,0 +1,29 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import ContactForm from '../../components/ContactForm.astro';
+import { site, prices } from '../../data/site';
+import { ids } from '../../lib/schema';
+const crumbs = [{ name: 'Home', path: '/' }, { name: 'Contact', path: '/contact/' }];
+---
+<BaseLayout title="Contact | Khaotic Digital" description="Book a Systems Audit, start a build conversation, or just ask a question. You talk to the engineer who does the work." crumbs={crumbs} pageTypes={['ContactPage']} about={ids.org}>
+  <PageHero crumbs={crumbs} eyebrow="Contact" title="Talk to the person who writes the code." lede={`Bigger work starts with a Systems Audit (${prices.audit}, fixed). Want a screenshare session, a walkthrough or coaching (from ${prices.hourlyFrom})? Send a note and I’ll reply within ${site.replyTime}.`}>
+    <div class="btn-row">
+      <a class="btn btn-primary" href="/audit/#book" data-track="audit_cta_click">Book a Systems Audit</a>
+      {site.calendlyUrl && <a class="btn btn-secondary" href={site.calendlyUrl}>Book a fit call</a>}
+    </div>
+  </PageHero>
+  <section class="section">
+    <div class="container split">
+      <div class="stack">
+        <h2>Send a message</h2>
+        <p class="muted">Questions, a session or coaching, agency partnerships, or a build you already know you need.</p>
+        <ul class="checks">
+          <li>Prefer Upwork? <a href={site.links.upwork}>Here’s my profile</a> (98% Job Success, Top Rated Plus).</li>
+          <li>See my code: <a href={site.links.github}>GitHub</a></li>
+        </ul>
+      </div>
+      <div class="card"><ContactForm intent="contact" /></div>
+    </div>
+  </section>
+</BaseLayout>

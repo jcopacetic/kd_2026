@@ -1,0 +1,53 @@
+---
+import ServicePage from '../../components/ServicePage.astro';
+import { prices } from '../../data/site';
+---
+<ServicePage
+  pillar="revops"
+  seoTitle="RevOps for SaaS: Engineered, Not Bolted On | Khaotic Digital"
+  description="Pipeline and lifecycle design, lead routing, attribution and reporting for B2B SaaS, set up in your CRM with custom code where needed."
+  h1="RevOps for B2B SaaS teams"
+  lede="When pipeline, routing and reporting live in five tools and nobody owns the whole thing, the numbers stop agreeing. I design the system, set it up in your CRM, and write code for the parts the settings can't handle."
+  problems={[
+    'Each rep reads the pipeline stages differently, so the forecast is a guess.',
+    'Leads land with the wrong owner, or none, because routing rules live in three places.',
+    'Marketing and sales pull different numbers from the same CRM.',
+    'Closed-won handoffs to onboarding happen in someone’s inbox.',
+    'The tools are "integrated" and someone still retypes data between them.',
+    'You pay for a CRM that two people on the team know how to use.',
+  ]}
+  builds={[
+    { title: 'Configuration in your CRM', body: 'Pipelines, properties, workflows, lists, dashboards and permissions, set up in the platform itself. If settings solve it, that’s where it stops.' },
+    { title: 'Pipeline & lifecycle design', body: 'Stages with exit criteria you can check, lifecycle and lead-status rules that keep funnel reports honest, and the fields each stage requires.' },
+    { title: 'Lead routing', body: 'Assignment by territory, segment, round robin or capacity. Edge cases that workflows can’t express get handled in code.' },
+    { title: 'Attribution & reporting', body: 'Source tracking that survives forms, redirects and integrations, plus a short list of reports both teams agree on.' },
+    { title: 'Automation', body: 'Workflows, custom-coded actions and integrations that move records, create the next team’s tasks and keep the data clean.' },
+    { title: 'Handoffs after the sale', body: 'A closed deal creates the onboarding work automatically, with the details the next team needs, and status flows back to sales.' },
+    { title: 'Playbooks & team training', body: 'Sales playbooks and SOPs, and training for reps and managers on working through the CRM day to day.' },
+    { title: 'Switching CRMs', body: 'Coming from Pipedrive, Zoho or Monday? Importing records is the easy part. Automations don’t transfer, so I rebuild the process along with the data.' },
+  ]}
+  steps={[
+    { title: 'Audit', body: 'A fixed-fee review of your CRM, pipeline and integrations.' },
+    { title: 'Roadmap', body: 'Issues ranked by impact and effort. Quick wins marked.' },
+    { title: 'Build', body: 'A scoped, fixed-price build of the fixes that matter most.' },
+    { title: 'Run (optional)', body: 'An Embedded Systems Partner retainer for ongoing changes.' },
+  ]}
+  proof={[
+    { title: 'Sales, ops and after-purchase system', body: 'An 88-hour build of the pipelines and automation that take a customer from sale through after-purchase support.' },
+    { title: 'Dialer wired into the CRM', body: 'Kixie connected to HubSpot, with the workflows built around it.', quote: 'Helped strategically with workflows… integrating Kixie and Hubspot.' },
+  ]}
+  prices={[
+    { label: 'Systems Audit', amount: prices.audit, note: 'Fixed fee. Most RevOps work starts here.', featured: true },
+    { label: 'RevOps build', prefix: 'From', amount: prices.buildFrom, note: 'Fixed scope, priced from the audit roadmap.' },
+    { label: 'Embedded Systems Partner', prefix: 'From', amount: prices.partnerRetainerFrom, note: 'A senior engineer on call for your revenue stack.' },
+  ]}
+  schemaPrice={{ min: 15000 }}
+  faq={[
+    { q: 'What does RevOps mean for a SaaS company?', a: 'Marketing, sales and customer success working from one set of data and one process: shared definitions, clean records, automatic handoffs and reports that match. Which tools you use matters less than how they connect.' },
+    { q: 'Do you only work in HubSpot?', a: 'HubSpot is the CRM I know best, and most of my clients run it. The work also covers the integrations and custom code around it, in Python or JavaScript, and the other APIs in your stack.' },
+    { q: 'Can you just show us how to do something?', a: 'Yes. Book a screenshare session and I’ll walk you through it on your own screen, whether that’s a report, a workflow or a cleanup. I can also coach whoever owns the CRM. No account access needed.' },
+    { q: 'Why start with an audit instead of a build?', a: 'Most RevOps problems are symptoms of something upstream. The audit finds the cause, ranks the fixes and prices them, so you only pay to build what will change the numbers.' },
+    { q: 'Can you fix our attribution?', a: 'Usually. Common causes are tracking that hasn’t loaded when a form is submitted, consent timing, and forms or integrations that create contacts without the visitor’s tracking cookie. The audit finds which one applies to you.' },
+    { q: 'We’re switching CRMs. Can you help?', a: 'Yes. I use a migration to rebuild the stages, automations and handoffs properly, so old problems don’t move over with the data.' },
+  ]}
+/>

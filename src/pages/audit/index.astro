@@ -1,0 +1,103 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import FAQList from '../../components/FAQList.astro';
+import ContactForm from '../../components/ContactForm.astro';
+import Testimonials from '../../components/Testimonials.astro';
+import Icon from '../../components/Icon.astro';
+import { prices, site } from '../../data/site';
+import { service, ids } from '../../lib/schema';
+
+const crumbs = [{ name: 'Home', path: '/' }, { name: 'Systems Audit', path: '/audit/' }];
+const description = 'A fixed-fee review of your CRM, pipeline, integrations and AI stack that ends with a prioritized roadmap you can act on with me or anyone else.';
+const faq = [
+  { q: 'Why is the audit paid instead of a free call?', a: 'You get analysis and a written deliverable instead of a sales call. By the end we both know whether a build makes sense.' },
+  { q: 'Do I have to hire you for the build?', a: 'No. The roadmap is yours to keep and specific enough to hand to your own team or anyone else.' },
+  { q: 'What access do you need?', a: 'Read-only access to your CRM and the tools connected to it, plus a working session with the people who use it. Nothing is changed during the audit.' },
+  { q: 'Which CRMs do you audit?', a: 'Mostly HubSpot, since that’s what most of my clients run, along with the integrations and custom apps around it. If you run something else, ask. The method is the same.' },
+  { q: 'Does it cover upcoming platform deprecations?', a: 'Yes. If your integrations use APIs or app types that are being retired, the roadmap lists each one, its deadline and what the move costs.' },
+  { q: 'How is the price set?', a: `It’s a fixed fee between ${prices.audit}, set at intake by the size of the system: how many tools, pipelines and integrations are involved. You know the number before we start.` },
+];
+---
+<BaseLayout
+  title="RevOps, CRM & AI Systems Audit | Khaotic Digital"
+  description={description}
+  crumbs={crumbs}
+  faq={faq}
+  about={ids.service('/audit/')}
+  schema={[service({ name: 'Systems Audit', path: '/audit/', description, serviceType: 'CRM, RevOps and AI systems audit', price: { min: 3500, max: 5000 } })]}
+>
+  <PageHero crumbs={crumbs} eyebrow={`Systems Audit · ${prices.audit} fixed`} title="Know exactly what’s broken, what to fix first, and what it’s worth.">
+    <p class="lede">A paid, fixed-fee diagnostic of your CRM, pipeline, integrations and AI stack by a senior engineer. It also flags any upcoming platform deprecations that affect you.</p>
+    <div class="btn-row">
+      <a class="btn btn-primary" href="#book" data-track="audit_cta_click">Book the Audit · {prices.audit}</a>
+    </div>
+  </PageHero>
+
+  <section class="section" aria-labelledby="get-h">
+    <div class="container split">
+      <div>
+        <span class="eyebrow">What you get</span>
+        <h2 id="get-h">A roadmap you keep</h2>
+        <p class="lede">Carry it out with me, with your own team, or with someone else.</p>
+      </div>
+      <ul class="checks">
+        <li><strong>A prioritized roadmap</strong>, with every issue ranked by impact and effort.</li>
+        <li><strong>Quick wins</strong> you can often fix this week without me.</li>
+        <li><strong>A scoped plan for the bigger fixes</strong>, with price ranges for budgeting.</li>
+        <li><strong>A deprecation check</strong> listing integrations on retiring APIs and their deadlines.</li>
+        <li><strong>A walkthrough session</strong> to go through it together and answer questions.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section surface" aria-labelledby="who-h">
+    <div class="container split">
+      <div>
+        <span class="eyebrow">Who it’s for</span>
+        <h2 id="who-h">B2B SaaS teams feeling RevOps, data or AI pain.</h2>
+      </div>
+      <div class="stack">
+        <p>Most run HubSpot alongside a handful of other tools. The audit covers the whole system: the CRM, the tools that feed it, and the tools it feeds.</p>
+        <p class="muted">Smaller business that mostly needs the website looked at? The <a href="/audit/website/">Website &amp; Presence Audit</a> is a better fit.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="process-h">
+    <div class="container">
+      <div class="section-head"><span class="eyebrow">Process</span><h2 id="process-h">Four steps, fixed fee</h2></div>
+      <ol class="steps steps-row">
+        <li><h3>Intake</h3><p>A short form and call to scope the system and set the fee.</p></li>
+        <li><h3>Read-only review</h3><p>I go through the CRM, integrations and data. Nothing changes.</p></li>
+        <li><h3>Working session</h3><p>With the people who use the system, to find what the data can’t show.</p></li>
+        <li><h3>Written roadmap</h3><p>Delivered and walked through, with priorities and price ranges.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="section on-ink pattern-strokes" id="book" aria-labelledby="book-h">
+    <div class="container split">
+      <div>
+        <Icon name="audit" class="icon" />
+        <span class="eyebrow" style="display:block;margin-top:1rem"><span class="dot"></span>{prices.audit} · {prices.auditNote}</span>
+        <h2 id="book-h">Book the audit</h2>
+        <p class="lede">Tell me about your stack and what’s not working. I’ll reply within {site.replyTime} to scope it.</p>
+        {site.calendlyUrl && <p><a class="btn btn-secondary" href={site.calendlyUrl} data-track="audit_booked">Or pick a time for a fit call</a></p>}
+      </div>
+      <div class="card" style="background:var(--kd-bg)">
+        <ContactForm intent="audit" />
+      </div>
+    </div>
+  </section>
+
+  <Testimonials />
+
+  <section class="section surface" aria-labelledby="faq-h">
+    <div class="narrow">
+      <span class="eyebrow">Questions</span>
+      <h2 id="faq-h">About the audit</h2>
+      <FAQList items={faq} />
+    </div>
+  </section>
+</BaseLayout>

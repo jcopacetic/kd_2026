@@ -1,0 +1,52 @@
+---
+import Logo from './Logo.astro';
+import { site, pillars } from '../data/site';
+const year = new Date().getFullYear();
+---
+<footer class="site-footer on-ink">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <a class="brand" href="/" aria-label="Khaotic Digital — home"><Logo /></a>
+        <p class="muted" style="margin-top:1rem;max-width:20rem">
+          {site.person.name}, {site.person.jobTitle}. US-based and veteran-owned.
+        </p>
+        <a class="btn btn-primary" href="/audit/#book">Book a Systems Audit</a>
+      </div>
+      <div>
+        <h2>Services</h2>
+        <ul>
+          {Object.values(pillars).map((p) => <li><a href={p.href}>{p.name}</a></li>)}
+          <li><a href="/audit/">Systems Audit</a></li>
+          <li><a href="/audit/website/">Website Audit</a></li>
+          <li><a href="/retainers/">Retainers</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Company</h2>
+        <ul>
+          <li><a href="/work/">Work</a></li>
+          <li><a href="/insights/">Insights</a></li>
+          <li><a href="/about/">About</a></li>
+          <li><a href="/faq/">FAQ</a></li>
+          <li><a href="/contact/">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Elsewhere</h2>
+        <ul>
+          <li><a href={site.links.github} rel="me">GitHub</a></li>
+          <li><a href={site.links.upwork} rel="me">Upwork</a></li>
+          <li><a href="/contact/">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-legal">
+      <p>
+        Khaotic Digital is independent of HubSpot, Inc. and is not authorized, endorsed, sponsored by or affiliated
+        with HubSpot. Other product names are trademarks of their respective owners.
+      </p>
+      <p>© {year} {site.legalName} · <a href="/privacy/">Privacy</a> · <button type="button" data-consent-open>Cookie settings</button></p>
+    </div>
+  </div>
+</footer>

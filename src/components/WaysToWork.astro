@@ -1,0 +1,31 @@
+---
+// How people can work with Jonathan — configuration, code, consulting, coaching.
+// Shared by the services hub and every service page.
+import { prices } from '../data/site';
+interface Props { heading?: string }
+const { heading = 'Configure it, build it, or show you how' } = Astro.props;
+const modes = [
+  { label: 'Configure', title: 'Set up in the platform', body: 'Pipelines, properties, workflows, lists, reports and settings configured directly in the platform. If that’s all the job needs, that’s all you pay for.' },
+  { label: 'Build', title: 'Code where config runs out', body: 'Custom-coded actions, integrations, apps and themes for the parts no setting can reach.' },
+  { label: 'Consult', title: 'Screenshare walkthroughs', body: `A 30- or 60-minute session on your screen: a second opinion, a decision talked through, or a fix shown step by step. No account access needed. From ${prices.hourlyFrom}.` },
+  { label: 'Coach', title: 'Training and coaching', body: 'Training for reps, managers and admins, so your team can run the system after I’ve finished.' },
+];
+---
+<section class="section" aria-labelledby="ways-h">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Ways to work with me</span>
+      <h2 id="ways-h">{heading}</h2>
+      <p class="lede">A configurator stops where the settings stop. I keep going when the job needs it, and I won’t write code when a setting will do.</p>
+    </div>
+    <div class="grid grid-4">
+      {modes.map((m) => (
+        <article class="card">
+          <span class="meta">{m.label}</span>
+          <h3 style="font-size:var(--kd-step-1)">{m.title}</h3>
+          <p>{m.body}</p>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>

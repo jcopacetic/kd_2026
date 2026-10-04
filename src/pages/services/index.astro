@@ -1,0 +1,50 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import PillarCards from '../../components/PillarCards.astro';
+import AuditCTA from '../../components/AuditCTA.astro';
+import ProofStrip from '../../components/ProofStrip.astro';
+import WaysToWork from '../../components/WaysToWork.astro';
+import { itemList, ids } from '../../lib/schema';
+import { pillars } from '../../data/site';
+const crumbs = [{ name: 'Home', path: '/' }, { name: 'Services', path: '/services/' }];
+const list = itemList('/services/', [...Object.values(pillars).map((p) => ({ name: p.name, path: p.href, id: ids.service(p.href) })), { name: 'Systems Audit', path: '/audit/', id: ids.service('/audit/') }, { name: 'Retainers', path: '/retainers/', id: ids.service('/retainers/') }]);
+---
+<BaseLayout
+  title="RevOps, AI & Custom Build Services | Khaotic Digital"
+  description="What a business systems engineer does: RevOps for SaaS, AI in your CRM, and custom apps and integrations, each scoped from a fixed-fee audit."
+  crumbs={crumbs}
+  pageTypes={['CollectionPage']}
+  mainEntity={{ '@id': list['@id'] }}
+  schema={[list]}
+>
+  <PageHero
+    crumbs={crumbs}
+    eyebrow="Services"
+    title="Business systems, engineered end to end."
+    lede="A business systems engineer works out how your CRM, pipeline, integrations and AI should fit together, sets them up, writes code where the settings stop, and trains your team to run them. It suits B2B teams that need someone who can build as well as advise."
+  />
+  <section class="section">
+    <div class="container"><PillarCards /></div>
+  </section>
+  <WaysToWork />
+  <section class="section surface" aria-labelledby="start-h">
+    <div class="container split">
+      <div>
+        <span class="eyebrow">Where to start</span>
+        <h2 id="start-h">Bigger work starts with the audit.</h2>
+      </div>
+      <div>
+        <p class="lede" style="color:var(--kd-text)">For anything bigger than a session, the audit shows which of the three you need and what it’s worth before anything gets built.</p>
+        <ul class="checks">
+          <li>Not sure what’s broken? <a href="/audit/">Systems Audit</a></li>
+          <li>Want a senior engineer on call? <a href="/retainers/">Retainers</a></li>
+          <li>Just need the website looked at? <a href="/audit/website/">Website Audit</a></li>
+          <li>Need a quick answer, a walkthrough or coaching? <a href="/contact/">Book a session</a></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+  <ProofStrip badges={false} />
+  <AuditCTA />
+</BaseLayout>

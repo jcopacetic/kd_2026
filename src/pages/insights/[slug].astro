@@ -1,0 +1,128 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { article, blog, ids } from '../../lib/schema';
+import { pillars, pillarLabel, prices, site } from '../../data/site';
+import { ogImagePath } from '../../data/og';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('insights', ({ data }) => !data.draft);
+  return posts.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+const { entry } = Astro.props;
+const { Content, headings } = await render(entry);
+const d = entry.data;
+const path = `/insights/${entry.id}/`;
+const crumbs = [{ name: 'Home', path: '/' }, { name: 'Insights', path: '/insights/' }, { name: d.title, path }];
+const toc = headings.filter((h) => h.depth === 2);
+const cover = ogImagePath(path);
+const body = entry.body ?? '';
+const wordCount = body.replace(/```[\s\S]*?```/g, ' ').split(/\s+/).filter(Boolean).length;
+const technical = /```/.test(body);
+const section = pillarLabel[d.pillar];
+const coverAlt = `Title card: ${d.title}`;
+const fmt = (date: Date) => date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' });
+const pillar = d.pillar === 'website' ? null : pillars[d.pillar];
+const related = (await getCollection('insights', ({ data, id }) => !data.draft && id !== entry.id && data.pillar === d.pillar)).slice(0, 3);
+---
+<BaseLayout
+  title={d.seoTitle ?? (d.title.length <= 42 ? `${d.title} | Khaotic Digital` : d.title)}
+  description={d.description}
+  type="article"
+  image={cover}
+  imageAlt={coverAlt}
+  crumbs={crumbs}
+  mainEntity={{ '@id': ids.article(path) }}
+  article={{ published: d.pubDate, modified: d.updatedDate, section, tags: d.tags }}
+  schema={[article({ path, title: d.title, description: d.description, pubDate: d.pubDate, updatedDate: d.updatedDate, section, tags: d.tags, wordCount, technical, guide: d.kind === 'guide' }), blog()]}
+>
+  <article>
+    <header class="page-hero">
+      <div class="container">
+        <Breadcrumbs items={crumbs} />
+        <span class="eyebrow">{d.kind === 'guide' ? 'Guide' : 'Insights'} · {pillarLabel[d.pillar]}</span>
+        <h1 style="max-width:28ch">{d.title}</h1>
+        <p class="lede">{d.description}</p>
+        <p class="post-meta">
+          <span>By <a href="/about/" rel="author">{site.person.name}</a></span>
+          <span>Published <time datetime={d.pubDate.toISOString()}>{fmt(d.pubDate)}</time></span>
+          {d.updatedDate && d.updatedDate > d.pubDate && <span>Updated <time datetime={d.updatedDate.toISOString()}>{fmt(d.updatedDate)}</time></span>}
+        </p>
+      </div>
+    </header>
+
+    <div class="container">
+      <figure class="post-cover">
+        <picture>
+          <source type="image/webp" srcset={`/og${path.slice(0, -1)}-800.webp 800w, /og${path.slice(0, -1)}-1200.webp 1200w`} sizes="(min-width: 46rem) 42rem, calc(100vw - 2rem)" />
+          <img src={cover} alt={coverAlt} width="1200" height="630" fetchpriority="high" decoding="async" />
+        </picture>
+      </figure>
+    </div>
+
+    <div class="container post-grid" style="padding-bottom:var(--kd-space-16)">
+      <div>
+        {pillar && (
+          <p class="muted" style="max-width:42rem;border-left:3px solid var(--kd-mint-300);padding-left:1rem">
+            Part of my work on <a href={pillar.href}>{pillar.name}</a>.
+          </p>
+        )}
+        <div class="prose"><Content /></div>
+
+        <aside class="cta-box on-ink pattern-status" aria-label="Get help">
+          <span class="eyebrow"><span class="dot"></span>Stuck on this in your own system?</span>
+          <h2>That’s what the audit is for.</h2>
+          <p class="lede">A fixed-fee Systems Audit ({prices.audit}) finds what’s broken across your CRM, integrations and AI stack and gives you a prioritized roadmap.</p>
+          <div class="btn-row" style="margin-top:var(--kd-space-4)">
+            <a class="btn btn-primary" href="/audit/#book" data-track="audit_cta_click">Book a Systems Audit</a>
+            <a class="btn btn-secondary" href="/contact/">Ask a question</a>
+          </div>
+        </aside>
+      </div>
+      {toc.length > 2 && (
+        <nav class="toc" aria-label="On this page">
+          <p class="eyebrow">On this page</p>
+          <ol>{toc.map((h) => <li><a href={`#${h.slug}`}>{h.text}</a></li>)}</ol>
+        </nav>
+      )}
+    </div>
+  </article>
+
+  {related.length > 0 && (
+    <section class="section surface" aria-labelledby="related-h">
+      <div class="container">
+        <h2 id="related-h" class="section-head">Related</h2>
+        <div class="grid grid-3">
+          {related.map((r) => (
+            <article class="card card-link">
+              <h3 style="font-size:var(--kd-step-1)"><a class="stretched" href={`/insights/${r.id}/`} style="color:inherit;text-decoration:none">{r.data.title}</a></h3>
+              <p>{r.data.description}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+</BaseLayout>
+
+<script>
+  // Copy buttons on code blocks (progressive enhancement).
+  for (const pre of document.querySelectorAll<HTMLPreElement>('.prose pre')) {
+    const wrap = document.createElement('div');
+    wrap.className = 'code-wrap';
+    pre.replaceWith(wrap);
+    wrap.append(pre);
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'copy-btn';
+    btn.textContent = 'Copy';
+    btn.addEventListener('click', async () => {
+      await navigator.clipboard.writeText(pre.innerText);
+      btn.textContent = 'Copied';
+      (window as any).kdTrack?.('code_copied', { page: location.pathname });
+      setTimeout(() => (btn.textContent = 'Copy'), 1500);
+    });
+    wrap.append(btn);
+  }
+</script>

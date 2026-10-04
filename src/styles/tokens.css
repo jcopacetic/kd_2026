@@ -1,0 +1,74 @@
+/* Khaotic Digital — design tokens (CSS). Source of truth: tokens.json.
+   Contrast of every semantic pair is checked in contrast-pairs.txt (all pass WCAG 2.2 AA). */
+
+:root {
+  color-scheme: light dark;
+
+  /* Primitives */
+  --kd-ink: #0a0a0a;
+  --kd-paper: #f5f5f4;
+  --kd-mint-50: #e2ffef;  --kd-mint-100: #cbfae0; --kd-mint-200: #a4eec7;
+  --kd-mint-300: #2ee59d; /* Signal mint — brand colour, fills only on light */
+  --kd-mint-400: #18c585; --kd-mint-500: #00a66e; --kd-mint-600: #008759;
+  --kd-mint-700: #006c46; /* Deep mint — text-safe on light */
+  --kd-mint-800: #005335; --kd-mint-900: #043d27; --kd-mint-950: #14231b;
+  --kd-neutral-0: #ffffff;   --kd-neutral-50: #f7fbf9;  --kd-neutral-100: #f0f5f2;
+  --kd-neutral-200: #e3e7e5; --kd-neutral-300: #d1d5d3; --kd-neutral-400: #a1a6a4;
+  --kd-neutral-500: #7d817f; --kd-neutral-600: #636765; --kd-neutral-700: #4d514f;
+  --kd-neutral-800: #333635; --kd-neutral-900: #1f2321; --kd-neutral-950: #141715;
+
+  /* Type */
+  --kd-font-display: "Space Grotesk", system-ui, sans-serif;
+  --kd-font-body: "Inter", system-ui, sans-serif;
+  --kd-font-mono: "JetBrains Mono", ui-monospace, monospace;
+  /* Fluid scale: 16px @1.2 (360px) → 18px @1.25 (1280px) */
+  --kd-step--1: clamp(0.8333rem, 0.8072rem + 0.1159vw, 0.9000rem);
+  --kd-step-0:  clamp(1.0000rem, 0.9511rem + 0.2174vw, 1.1250rem);
+  --kd-step-1:  clamp(1.2000rem, 1.1193rem + 0.3587vw, 1.4062rem);
+  --kd-step-2:  clamp(1.4400rem, 1.3156rem + 0.5527vw, 1.7578rem);
+  --kd-step-3:  clamp(1.7280rem, 1.5444rem + 0.8161vw, 2.1973rem);
+  --kd-step-4:  clamp(2.0736rem, 1.8103rem + 1.1704vw, 2.7466rem);
+  --kd-step-5:  clamp(2.4883rem, 2.1186rem + 1.6433vw, 3.4332rem);
+
+  /* Space + radius */
+  --kd-space-1: 4px; --kd-space-2: 8px; --kd-space-3: 12px; --kd-space-4: 16px;
+  --kd-space-6: 24px; --kd-space-8: 32px; --kd-space-12: 48px; --kd-space-16: 64px;
+  --kd-radius-sm: 6px; --kd-radius-md: 10px; --kd-radius-tile: 22%;
+
+  /* Semantic — light (default) */
+  --kd-bg: var(--kd-neutral-0);
+  --kd-surface: var(--kd-neutral-50);
+  --kd-text: var(--kd-ink);
+  --kd-text-muted: var(--kd-neutral-600);
+  --kd-link: var(--kd-mint-700);
+  --kd-border-subtle: var(--kd-neutral-200);
+  --kd-border-control: var(--kd-neutral-500);
+  --kd-primary: var(--kd-mint-300);
+  --kd-on-primary: var(--kd-ink);
+  --kd-focus: var(--kd-mint-700);
+}
+
+/* Semantic — dark: follows the OS unless the page forces a theme */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --kd-bg: var(--kd-ink);
+    --kd-surface: var(--kd-neutral-950);
+    --kd-text: var(--kd-paper);
+    --kd-text-muted: var(--kd-neutral-400);
+    --kd-link: var(--kd-mint-300);
+    --kd-border-subtle: var(--kd-neutral-800);
+    --kd-border-control: var(--kd-neutral-600);
+    --kd-focus: var(--kd-mint-300);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --kd-bg: var(--kd-ink);
+  --kd-surface: var(--kd-neutral-950);
+  --kd-text: var(--kd-paper);
+  --kd-text-muted: var(--kd-neutral-400);
+  --kd-link: var(--kd-mint-300);
+  --kd-border-subtle: var(--kd-neutral-800);
+  --kd-border-control: var(--kd-neutral-600);
+  --kd-focus: var(--kd-mint-300);
+}

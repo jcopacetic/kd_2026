@@ -1,0 +1,14 @@
+---
+import Breadcrumbs from './Breadcrumbs.astro';
+interface Props { eyebrow?: string; title: string; lede?: string; crumbs?: { name: string; path: string }[]; ink?: boolean }
+const { eyebrow, title, lede, crumbs, ink = true } = Astro.props;
+---
+<section class:list={['page-hero', { 'on-ink pattern-pulse': ink }]}>
+  <div class="container">
+    {crumbs && <Breadcrumbs items={crumbs} />}
+    {eyebrow && <span class="eyebrow"><span class="dot"></span>{eyebrow}</span>}
+    <h1>{title}</h1>
+    {lede && <p class="lede">{lede}</p>}
+    <slot />
+  </div>
+</section>

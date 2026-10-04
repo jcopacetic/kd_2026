@@ -1,0 +1,35 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import AuditCTA from '../components/AuditCTA.astro';
+import { prices } from '../data/site';
+import { service, ids } from '../lib/schema';
+const crumbs = [{ name: 'Home', path: '/' }, { name: 'Retainers', path: '/retainers/' }];
+const description = 'An embedded senior engineer for your revenue stack, a fractional head of systems, AI-agent governance, or a care plan for systems I’ve built.';
+const plans = [
+  { name: 'Embedded Systems Partner', prefix: 'From', amount: prices.partnerRetainerFrom, featured: true, body: 'Your on-call senior engineer for the revenue stack: a bounded block of development hours, advisory calls and monthly reporting.' },
+  { name: 'Fractional RevOps / Head of Systems', amount: prices.fractional, body: 'One to two days a week running your revenue-systems function, when the fit is right.' },
+  { name: 'AI-Agent Integration', amount: prices.aiRetainer, body: 'Ongoing governance of AI in your CRM: evals, cost control, permissions and model changes.' },
+  { name: 'Care Plan', prefix: 'From', amount: prices.carePlanFrom, body: 'Upkeep, small fixes and monitoring for sites and systems I’ve built.' },
+];
+---
+<BaseLayout title="Retainers & Fractional RevOps | Khaotic Digital" description={description} crumbs={crumbs}
+  about={ids.service('/retainers/')}
+  schema={[service({ name: 'Embedded Systems Partner retainer', path: '/retainers/', description, serviceType: 'Fractional RevOps and systems engineering retainer', price: { min: 5000, unit: 'MON' } })]}>
+  <PageHero crumbs={crumbs} eyebrow="Work with me" title="Fewer, deeper relationships." lede="For teams that want a senior engineer who already knows their stack, without a full-time hire." />
+  <section class="section">
+    <div class="container">
+      <div class="grid grid-2">
+        {plans.map((p) => (
+          <article class:list={['price-card', { featured: p.featured }]}>
+            <h2 style="font-size:var(--kd-step-2);margin:0">{p.name}</h2>
+            <p class="amount">{p.prefix && <small>{p.prefix}</small>}{p.amount}</p>
+            <p>{p.body}</p>
+          </article>
+        ))}
+      </div>
+      <p class="muted" style="margin-top:var(--kd-space-8)">Retainers start after a Systems Audit, so the hours go to the work that matters most. You can cancel with notice.</p>
+    </div>
+  </section>
+  <AuditCTA heading="Start with the audit." body="It shows whether a retainer, a build or neither is the right next step, and you keep the roadmap either way." />
+</BaseLayout>

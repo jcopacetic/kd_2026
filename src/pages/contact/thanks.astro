@@ -1,0 +1,11 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { site } from '../../data/site';
+---
+<BaseLayout title="Thanks | Khaotic Digital" description="Your message is in." noindex>
+  <section class="section"><div class="narrow stack">
+    <span class="eyebrow"><span class="dot"></span>Received</span>
+    <h1>Thanks, I’ve got it.</h1>
+    <p class="lede">I’ll reply within {site.replyTime}. In the meantime, you might find something useful in the <a href="/insights/">insights</a>.</p>
+  </div></section>
+</BaseLayout>

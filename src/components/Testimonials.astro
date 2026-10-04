@@ -1,0 +1,15 @@
+---
+import { proof } from '../data/site';
+interface Props { count?: number; heading?: string }
+const { count = 3, heading = 'What clients say' } = Astro.props;
+---
+<section class="section" aria-labelledby="quotes-h">
+  <div class="container">
+    <h2 id="quotes-h" class="section-head" style="margin-bottom:var(--kd-space-8)">{heading}</h2>
+    <div class="quotes">
+      {proof.testimonials.slice(0, count).map((t) => (
+        <figure class="quote"><blockquote style="margin:0"><p>“{t.quote}”</p></blockquote><footer>{t.context}</footer></figure>
+      ))}
+    </div>
+  </div>
+</section>

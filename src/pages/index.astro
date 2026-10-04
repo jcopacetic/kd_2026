@@ -1,0 +1,121 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ProofStrip from '../components/ProofStrip.astro';
+import PillarCards from '../components/PillarCards.astro';
+import AuditCTA from '../components/AuditCTA.astro';
+import Testimonials from '../components/Testimonials.astro';
+import { site, pillarLabel } from '../data/site';
+import { ids } from '../lib/schema';
+import { Image } from 'astro:assets';
+import portrait from '../assets/photos/jonathan-sumner-about-portrait.png';
+
+const flagship = (await getCollection('work')).find((w) => w.id === 'ai-startup-application-portal');
+const latest = (await getCollection('insights', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 3);
+---
+<BaseLayout
+  about={ids.org}
+  title="Jonathan Sumner | Business Systems Engineer (RevOps & AI)"
+  description="Jonathan Sumner builds the RevOps, CRM and AI systems configurators can’t: custom integrations, AI in your CRM, and the automation behind them."
+>
+  <section class="hero on-ink pattern-pulse">
+    <div class="container">
+      <span class="eyebrow"><span class="dot"></span>{site.person.name} · {site.person.jobTitle}</span>
+      <h1>{site.tagline}</h1>
+      <p class="lede">
+        I work across HubSpot, Python/Django, Next.js and the APIs that connect them, building integrations, putting
+        AI to work inside your CRM, and setting up the RevOps around it. 265 projects, $300K+ delivered, 98% Job Success.
+      </p>
+      <div class="btn-row">
+        <a class="btn btn-primary" href="/audit/#book" data-track="audit_cta_click">Book a Systems Audit</a>
+        <a class="btn btn-secondary" href="/work/">See the work</a>
+      </div>
+    </div>
+  </section>
+
+  <ProofStrip />
+
+  <section class="section" aria-labelledby="contrast-h">
+    <div class="container">
+      <span class="eyebrow">Why an engineer</span>
+      <h2 id="contrast-h" class="visually-hidden">The difference</h2>
+      <p class="contrast">
+        Most CRM “help” is a configurator clicking through settings until the platform runs out of road. Plenty of
+        AI demos break the first time they meet a messy database. And a lot of RevOps advice comes from people who
+        can’t build what they recommend. I’m a software engineer. I configure what can be configured, code the rest, and ship it.
+      </p>
+    </div>
+  </section>
+
+  <section class="section surface" aria-labelledby="pillars-h">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Services</span>
+        <h2 id="pillars-h">Three kinds of work, one engineer</h2>
+        <p class="lede">I start by learning how your revenue system works today. Then I configure it, build what’s missing, or teach your team to run it.</p>
+      </div>
+      <PillarCards />
+    </div>
+  </section>
+
+  {flagship && (
+    <section class="section" aria-labelledby="flagship-h">
+      <div class="container split">
+        <div>
+          <span class="eyebrow">Selected work · {pillarLabel[flagship.data.pillar]}</span>
+          <h2 id="flagship-h">{flagship.data.title}</h2>
+          <p class="lede">{flagship.data.summary}</p>
+          <div class="btn-row"><a class="link-arrow" href="/work/">See more work</a></div>
+        </div>
+        {flagship.data.quote && (
+          <figure class="quote" style="border-top:2px solid var(--kd-text)">
+            <blockquote style="margin:0"><p>“{flagship.data.quote.charAt(0).toUpperCase() + flagship.data.quote.slice(1)}”</p></blockquote>
+            <footer>Client review · {flagship.data.rating?.toFixed(1)} ★</footer>
+          </figure>
+        )}
+      </div>
+    </section>
+  )}
+
+  <AuditCTA />
+
+  <section class="section" aria-labelledby="trust-h">
+    <div class="container split trust">
+      <figure class="portrait">
+        <Image src={portrait} alt="Jonathan Sumner, arms crossed, in a blue shirt" widths={[320, 480, 720, 960]} sizes="(min-width: 56rem) 24rem, 80vw" loading="lazy" />
+      </figure>
+      <div class="stack">
+        <span class="eyebrow">How I work</span>
+        <h2 id="trust-h">You talk to the person who writes the code.</h2>
+        <p class="lede" style="color:var(--kd-text)">
+          There are no account managers or offshore hand-offs, and no retainer you can’t cancel. You work with one
+          senior engineer who answers for the work. US-based and veteran-owned.
+        </p>
+        <a class="link-arrow" href="/about/">More about me</a>
+      </div>
+    </div>
+  </section>
+
+  <Testimonials />
+
+  <section class="section surface" aria-labelledby="insights-h">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Insights</span>
+        <h2 id="insights-h">Notes from client work</h2>
+      </div>
+      <div class="grid grid-3">
+        {latest.map((p) => (
+          <article class="card card-link">
+            <span class="meta">{pillarLabel[p.data.pillar]}</span>
+            <h3 style="font-size:var(--kd-step-1)"><a class="stretched" href={`/insights/${p.id}/`} style="color:inherit;text-decoration:none">{p.data.title}</a></h3>
+            <p>{p.data.description}</p>
+          </article>
+        ))}
+      </div>
+      <div class="btn-row"><a class="link-arrow" href="/insights/">All insights</a></div>
+    </div>
+  </section>
+</BaseLayout>

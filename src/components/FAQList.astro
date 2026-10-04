@@ -1,0 +1,13 @@
+---
+// Answers are plain text (also used verbatim in FAQPage JSON-LD).
+interface Props { items: { q: string; a: string }[] }
+const { items } = Astro.props;
+---
+<div class="faq">
+  {items.map((it) => (
+    <details>
+      <summary>{it.q}</summary>
+      <div class="answer">{it.a.split('\n\n').map((para) => <p>{para}</p>)}</div>
+    </details>
+  ))}
+</div>

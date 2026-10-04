@@ -1,0 +1,58 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import ContactForm from '../../components/ContactForm.astro';
+import { prices, site } from '../../data/site';
+import { service, ids } from '../../lib/schema';
+
+const crumbs = [{ name: 'Home', path: '/' }, { name: 'Systems Audit', path: '/audit/' }, { name: 'Website Audit', path: '/audit/website/' }];
+const description = 'A quick, fixed-fee review of your website and online presence: performance, SEO, tracking, lead capture, and the gaps that are costing you leads.';
+---
+<BaseLayout
+  title="Website & Online-Presence Audit | Khaotic Digital"
+  description={description}
+  crumbs={crumbs}
+  about={ids.service('/audit/website/')}
+  schema={[service({ name: 'Website & Online-Presence Audit', path: '/audit/website/', description, serviceType: 'Website and SEO audit', price: { min: 1000, max: 1500 } })]}
+>
+  <PageHero crumbs={crumbs} eyebrow={`Website Audit · ${prices.websiteAuditRange}`} title="Find the gaps costing you leads." lede={description}>
+    <div class="btn-row"><a class="btn btn-primary" href="#book" data-track="audit_cta_click">Book the Website Audit</a></div>
+  </PageHero>
+
+  <section class="section" aria-labelledby="covers-h">
+    <div class="container split">
+      <div>
+        <span class="eyebrow">What it covers</span>
+        <h2 id="covers-h">Your site and everything that points at it.</h2>
+      </div>
+      <ul class="checks">
+        <li><strong>Performance:</strong> speed and Core Web Vitals, page by page.</li>
+        <li><strong>SEO:</strong> indexing, titles, structure and what Search Console reports.</li>
+        <li><strong>Tracking:</strong> whether analytics and form attribution work.</li>
+        <li><strong>Lead capture:</strong> forms, calls to action and where they lead.</li>
+        <li><strong>Online presence:</strong> listings, profiles and citations that disagree with each other.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section surface" aria-labelledby="for-h">
+    <div class="container split">
+      <div><span class="eyebrow">Who it’s for</span><h2 id="for-h">Small businesses and agencies.</h2></div>
+      <div class="stack">
+        <p>A faster, tool-assisted review for teams whose main question is the website. You get a written report with fixes ranked by impact, and you can implement them with anyone.</p>
+        <p class="muted">Need the CRM, integrations or AI stack reviewed too? That’s the <a href="/audit/">Systems Audit</a>.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section on-ink pattern-strokes" id="book" aria-labelledby="book-h">
+    <div class="container split">
+      <div>
+        <span class="eyebrow"><span class="dot"></span>{prices.websiteAuditRange} · fixed fee</span>
+        <h2 id="book-h">Book the Website Audit</h2>
+        <p class="lede">Send your URL and what you want from the site. I’ll reply within {site.replyTime}.</p>
+      </div>
+      <div class="card" style="background:var(--kd-bg)"><ContactForm intent="website-audit" /></div>
+    </div>
+  </section>
+</BaseLayout>

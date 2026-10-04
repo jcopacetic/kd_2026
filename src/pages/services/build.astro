@@ -1,0 +1,55 @@
+---
+import ServicePage from '../../components/ServicePage.astro';
+import { prices } from '../../data/site';
+---
+<ServicePage
+  pillar="build"
+  seoTitle="Custom Apps & Platform Development | Khaotic Digital"
+  description="Custom Django and Next.js apps, API integrations, CMS themes and modules, and migrations off retiring platform APIs, for jobs the drag-and-drop editor can't do."
+  h1="Custom apps, integrations and platform development"
+  lede="Some jobs have no setting for them. I build the apps, integrations and CMS components that go past what a platform does on its own, and I keep them working when the platform changes."
+  problems={[
+    'What you need isn’t a setting, a template or a marketplace app.',
+    'Two systems have to stay in sync both ways, and Zapier keeps creating duplicates.',
+    'Your integration runs on platform APIs that are being retired.',
+    'The theme makes every page change harder than it should be.',
+    'You need an application of your own, and the CRM workarounds have run out.',
+    'Your team is nervous about touching the site editor.',
+  ]}
+  builds={[
+    { title: 'Platform setup & configuration', body: 'Marketplace themes, forms, domains, redirects and CMS settings set up properly. If the platform already does the job, no custom code.' },
+    { title: 'Custom apps', body: 'Portals, dashboards and internal tools in Django or Next.js that work alongside your CRM.' },
+    { title: 'API integrations', body: 'Two-way sync with retries, rate-limit handling and clear source-of-truth rules. Webhooks and custom-coded workflow actions too.' },
+    { title: 'Legacy API & app migrations', body: 'Moving integrations off retiring APIs and app types. For HubSpot, that means the 2026–27 deadlines for private apps, CRM cards, OAuth and API versions.' },
+    { title: 'CMS development', body: 'HubSpot themes, modules, HubDB, dynamic pages and serverless functions, built so editors can change content without breaking the layout.' },
+    { title: 'Site migrations', body: 'Moving a site between platforms (Webflow to HubSpot, for example) with content, redirects and features carried over.' },
+    { title: 'Editor walkthroughs & coaching', body: 'Sessions that teach your team the theme, the modules and the page editor, so they can make changes with confidence.' },
+    { title: 'Performance & SEO foundations', body: 'Fast pages that search engines can crawl. A slow site loses leads before anyone reads it.' },
+  ]}
+  steps={[
+    { title: 'Audit', body: 'What needs building, what it touches, and the cheapest approach that will last.' },
+    { title: 'Scope', body: 'A fixed scope and price based on the audit roadmap.' },
+    { title: 'Build', body: 'In a sandbox, with tests and sample data from your system.' },
+    { title: 'Hand over', body: 'Deployed and documented with error alerts, or maintained on a care plan.' },
+  ]}
+  proof={[
+    { title: 'Application portal for an AI startup', body: 'Built from scratch in Django over 169 hours.', quote: 'A spectacular engineer… instantaneous value… hit the ground running on day one.' },
+    { title: 'Webflow to HubSpot migration', body: 'Moved the site over and added new features in the process.', quote: 'Such a great team member… move from Webflow to Hubspot.' },
+    { title: 'API integration for an EdTech SaaS', body: 'A HubSpot API integration for the product.', quote: 'Very professional, efficient, and brought real insight and domain knowledge.' },
+    { title: 'Custom HubSpot theme', body: 'A 93-hour custom theme build.' },
+  ]}
+  prices={[
+    { label: 'Systems Audit', amount: prices.audit, note: 'Fixed fee. Builds are scoped from it.', featured: true },
+    { label: 'Fixed-scope build', amount: prices.buildRange, note: 'Depends on scope; priced after the audit.' },
+    { label: 'Care plan', prefix: 'From', amount: prices.carePlanFrom, note: 'Upkeep, small fixes and monitoring for systems I’ve built.' },
+  ]}
+  schemaPrice={{ min: 15000, max: 25000 }}
+  faq={[
+    { q: 'Do you build on HubSpot or outside it?', a: 'Both. If the job lives in the CMS, I build HubSpot themes, modules and serverless functions. If it needs its own data, logic or interface, I build a Django or Next.js app.' },
+    { q: 'Do I always need custom code?', a: 'No. If a setting, template or marketplace app does the job, I’ll configure it and say so. Code is for the parts nothing else covers.' },
+    { q: 'Are my integrations affected by HubSpot’s API deprecations?', a: 'They are if they use legacy private apps, classic CRM cards, OAuth v1 or the v1–v3 APIs. HubSpot retires those between October 2026 and September 2027. The Systems Audit lists what’s affected and what moving it costs.' },
+    { q: 'Zapier, Make or custom code?', a: 'Zapier or Make for simple, low-volume, one-way steps. Custom code for two-way sync, high volume, or logic the no-code tools can’t handle. I’ll recommend the cheapest option that will still work next year.' },
+    { q: 'Who owns the code?', a: 'You do. It lives in your repositories and accounts, with documentation.' },
+    { q: 'Do you work white-label for agencies?', a: 'Yes. I take on builds for agencies that sell platform work without a senior engineer on staff, and I stay out of the client relationship.' },
+  ]}
+/>

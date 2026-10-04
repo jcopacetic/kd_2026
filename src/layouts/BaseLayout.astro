@@ -1,0 +1,130 @@
+---
+import '@fontsource/space-grotesk/latin-500.css';
+import '@fontsource/space-grotesk/latin-700.css';
+import '@fontsource/inter/latin-400.css';
+import '@fontsource/inter/latin-600.css';
+import '@fontsource/jetbrains-mono/latin-400.css';
+import '@fontsource/jetbrains-mono/latin-500.css';
+import '../styles/global.css';
+import fontDisplay from '@fontsource/space-grotesk/files/space-grotesk-latin-700-normal.woff2?url';
+import fontBody from '@fontsource/inter/files/inter-latin-400-normal.woff2?url';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Analytics from '../components/Analytics.astro';
+import { site } from '../data/site';
+import { graph, organization, person, website, breadcrumbs as crumbLd, webPage, primaryImage, type PageType } from '../lib/schema';
+import { ogPages, ogImagePath } from '../data/og';
+
+interface Props {
+  title: string; // full <title>, ≤ 60 characters
+  description: string; // ≤ 160 characters
+  image?: string;
+  imageAlt?: string;
+  type?: 'website' | 'article';
+  noindex?: boolean;
+  crumbs?: { name: string; path: string }[];
+  /** Page node type(s) for JSON-LD; FAQPage is added automatically when `faq` is set. */
+  pageTypes?: PageType[];
+  faq?: { q: string; a: string }[];
+  /** @id of what the page is about (e.g. a Service), and/or its main entity. */
+  about?: string;
+  mainEntity?: object;
+  article?: { published: Date; modified?: Date; section: string; tags: string[] };
+  schema?: object[];
+}
+const { title, description, type = 'website', noindex = false, crumbs, pageTypes, faq, about, mainEntity, article, schema = [] } = Astro.props;
+const path = Astro.url.pathname;
+const card = ogPages[path];
+const image = Astro.props.image ?? (card ? ogImagePath(path) : '/og/home.png');
+const imageAlt = Astro.props.imageAlt ?? (card ? `${card.eyebrow}: ${card.title}` : 'Khaotic Digital');
+const canonical = new URL(path, site.url).href;
+const ogImage = new URL(image, site.url).href;
+const ogTitle = title.replace(/\s*\|\s*Khaotic Digital$/, '');
+
+if (!noindex && import.meta.env.DEV === false) {
+  if (title.length > 60) console.warn(`[seo] title is ${title.length} chars (>60): ${path}`);
+  if (description.length > 160) console.warn(`[seo] description is ${description.length} chars (>160): ${path}`);
+}
+
+const ld = noindex
+  ? null
+  : graph(
+      organization(),
+      person(),
+      website(),
+      primaryImage(path, image, imageAlt),
+      webPage({
+        path,
+        name: ogTitle,
+        description,
+        types: pageTypes,
+        hasBreadcrumb: Boolean(crumbs),
+        about,
+        mainEntity,
+        faq,
+        datePublished: article?.published,
+        dateModified: article?.modified ?? article?.published,
+      }),
+      ...(crumbs ? [crumbLd(path, crumbs)] : []),
+      ...schema,
+    );
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <meta name="author" content={site.person.name} />
+    <meta name="theme-color" content="#0a0a0a" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="preload" href={fontDisplay} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={fontBody} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/patterns/pulse-ink.svg" as="image" type="image/svg+xml" fetchpriority="high" />
+    <meta property="og:type" content={type} />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={ogTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={imageAlt} />
+    {article && (
+      <>
+        <meta property="article:published_time" content={article.published.toISOString()} />
+        <meta property="article:modified_time" content={(article.modified ?? article.published).toISOString()} />
+        <meta property="article:author" content={new URL('/about/', site.url).href} />
+        <meta property="article:section" content={article.section} />
+        {article.tags.map((tag) => <meta property="article:tag" content={tag} />)}
+      </>
+    )}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={ogTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content={imageAlt} />
+    {site.links.x && <meta name="twitter:site" content={site.links.x} />}
+    <slot name="head" />
+    {ld && <script type="application/ld+json" set:html={JSON.stringify(ld)} />}
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+    <Analytics />
+  </body>
+</html>

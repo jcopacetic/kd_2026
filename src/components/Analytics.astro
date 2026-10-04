@@ -1,0 +1,54 @@
+---
+// GA4 with a consent gate (site-content/04: CMP required). Basic mode: gtag.js is not
+// loaded at all until the visitor accepts. The choice is stored in localStorage and can be
+// changed from the footer's "Cookie settings" button.
+import { site } from '../data/site';
+const id = site.ga4Id;
+const hs = site.hubspotPortalId;
+---
+<div class="consent on-ink" role="dialog" aria-labelledby="consent-title" hidden data-consent data-ga={id} data-hs={hs || undefined}>
+  <p id="consent-title"><strong>Analytics cookies?</strong> I use {hs ? 'Google Analytics and HubSpot' : 'Google Analytics'} to see which pages help people. Nothing loads unless you say yes.</p>
+  <div class="btn-row" style="margin-top:0">
+    <button type="button" class="btn btn-primary" data-consent-choice="granted">Allow</button>
+    <button type="button" class="btn btn-secondary" data-consent-choice="denied">No thanks</button>
+  </div>
+</div>
+<script>
+  // A bundled script (not define:vars) so Astro can cover it with the CSP; IDs come from data-*.
+  const KEY = 'kd-consent';
+  const banner = document.querySelector<HTMLElement>('[data-consent]');
+  const id = banner?.dataset.ga ?? '';
+  const hs = banner?.dataset.hs ?? '';
+  const w = window as unknown as { __kdGa?: boolean; dataLayer: unknown[]; gtag?: (...a: unknown[]) => void; kdTrack: (n: string, p?: object) => void };
+  const read = () => { try { return localStorage.getItem(KEY); } catch { return null; } };
+  const write = (v: string) => { try { localStorage.setItem(KEY, v); } catch {} };
+  const addScript = (src: string, extra: Partial<HTMLScriptElement> = {}) => {
+    const s = Object.assign(document.createElement('script'), { async: true, src }, extra);
+    document.head.appendChild(s);
+  };
+  function load() {
+    if (w.__kdGa || !id) return;
+    w.__kdGa = true;
+    w.dataLayer = w.dataLayer || [];
+    // gtag.js expects the Arguments object, not an array.
+    w.gtag = function () { w.dataLayer.push(arguments); };
+    w.gtag('js', new Date());
+    w.gtag('config', id, { anonymize_ip: true });
+    addScript(`https://www.googletagmanager.com/gtag/js?id=${id}`);
+    if (hs) addScript(`https://js.hs-scripts.com/${hs}.js`, { defer: true, id: 'hs-script-loader' });
+  }
+  w.kdTrack = (name, params) => w.gtag?.('event', name, params || {});
+  const choice = read();
+  if (choice === 'granted') load();
+  else if (!choice && banner) banner.hidden = false;
+  document.addEventListener('click', (e) => {
+    const t = (e.target as Element).closest<HTMLElement>('[data-consent-choice],[data-consent-open],[data-track]');
+    if (!t || !banner) return;
+    if (t.hasAttribute('data-consent-open')) { banner.hidden = false; return; }
+    if (t.dataset.track) { w.kdTrack(t.dataset.track); return; }
+    const v = t.dataset.consentChoice ?? 'denied';
+    write(v);
+    banner.hidden = true;
+    if (v === 'granted') load();
+  });
+</script>

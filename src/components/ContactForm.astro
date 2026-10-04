@@ -1,0 +1,77 @@
+---
+// Posts to /api/contact, which emails the submission to Jonathan. Works without JS (server
+// redirects to /contact/thanks/); with JS it submits in place and fires GA4 events.
+import { site } from '../data/site';
+interface Props { intent?: 'audit' | 'website-audit' | 'contact' }
+const { intent = 'contact' } = Astro.props;
+const uid = `f-${intent}`;
+const messageLabel = {
+  audit: 'What’s not working? Which tools are in your stack?',
+  'website-audit': 'What do you want the site to do better?',
+  contact: 'How can I help?',
+}[intent];
+---
+<form class="form" method="post" action="/api/contact/" data-contact-form data-intent={intent}>
+  <input type="hidden" name="intent" value={intent} />
+  <input type="hidden" name="pageUri" value="" data-page-uri />
+  <input type="hidden" name="rendered_at" value="" data-rendered-at />
+  <div class="row-2">
+    <div class="field"><label for={`${uid}-first`}>First name</label><input id={`${uid}-first`} name="firstname" autocomplete="given-name" required /></div>
+    <div class="field"><label for={`${uid}-last`}>Last name</label><input id={`${uid}-last`} name="lastname" autocomplete="family-name" required /></div>
+  </div>
+  <div class="row-2">
+    <div class="field"><label for={`${uid}-email`}>Work email</label><input id={`${uid}-email`} name="email" type="email" autocomplete="email" required /></div>
+    <div class="field"><label for={`${uid}-co`}>{intent === 'website-audit' ? 'Website URL' : 'Company'}</label><input id={`${uid}-co`} name={intent === 'website-audit' ? 'website' : 'company'} autocomplete={intent === 'website-audit' ? 'url' : 'organization'} /></div>
+  </div>
+  <div class="field"><label for={`${uid}-msg`}>{messageLabel}</label><textarea id={`${uid}-msg`} name="message" required></textarea></div>
+  <div class="field">
+    <label for={`${uid}-src`}>How did you find me?</label>
+    <select id={`${uid}-src`} name="how_did_you_hear">
+      <option value="">Choose one (optional)</option>
+      <option>Search engine</option>
+      <option>AI assistant (ChatGPT, Claude, Perplexity…)</option>
+      <option>Upwork</option>
+      <option>Referral or past client</option>
+      <option>GitHub or a community answer</option>
+      <option>Other</option>
+    </select>
+  </div>
+  <div class="hp" aria-hidden="true"><label>Leave this empty <input name="company_url" tabindex="-1" autocomplete="off" /></label></div>
+  {site.turnstileSiteKey && <div class="cf-turnstile" data-sitekey={site.turnstileSiteKey}></div>}
+  <div><button class="btn btn-primary" type="submit">{intent === 'contact' ? 'Send' : 'Request the audit'}</button></div>
+  <p class="form-status" role="status" aria-live="polite" data-status></p>
+  <p class="muted" style="font-size:var(--kd-step--1);margin:0">I reply within {site.replyTime}. Your message comes straight to my inbox and isn’t shared (see the <a href="/privacy/">privacy notice</a>).</p>
+</form>
+{site.turnstileSiteKey && <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>}
+
+<script>
+  for (const form of document.querySelectorAll<HTMLFormElement>('[data-contact-form]')) {
+    const uri = form.querySelector<HTMLInputElement>('[data-page-uri]');
+    if (uri) uri.value = location.href;
+    const renderedAt = form.querySelector<HTMLInputElement>('[data-rendered-at]');
+    if (renderedAt) renderedAt.value = String(Date.now());
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const status = form.querySelector<HTMLElement>('[data-status]')!;
+      const button = form.querySelector<HTMLButtonElement>('button[type=submit]')!;
+      button.disabled = true;
+      status.dataset.state = '';
+      status.textContent = 'Sending…';
+      try {
+        const res = await fetch(form.action, { method: 'POST', body: new FormData(form), headers: { Accept: 'application/json' } });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data.error || 'Something went wrong.');
+        status.dataset.state = 'ok';
+        status.textContent = 'Thanks, I’ve got it. I’ll be in touch soon.';
+        form.reset();
+        const intent = form.dataset.intent;
+        (window as any).kdTrack?.(intent === 'contact' ? 'contact_submitted' : 'audit_booked', { intent });
+      } catch (err) {
+        status.dataset.state = 'error';
+        status.textContent = `${(err as Error).message} Please try again in a few minutes.`;
+      } finally {
+        button.disabled = false;
+      }
+    });
+  }
+</script>

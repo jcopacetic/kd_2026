@@ -1,0 +1,32 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import AuditCTA from '../../components/AuditCTA.astro';
+import { pillarLabel, pillars } from '../../data/site';
+
+export async function getStaticPaths() {
+  const work = await getCollection('work', ({ data }) => !data.draft);
+  return work.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const d = entry.data;
+const crumbs = [{ name: 'Home', path: '/' }, { name: 'Work', path: '/work/' }, { name: d.title, path: `/work/${entry.id}/` }];
+const pillar = d.pillar === 'website' ? undefined : pillars[d.pillar];
+---
+<BaseLayout title={`${d.title} | Khaotic Digital`} description={d.summary} crumbs={crumbs} type="article">
+  <PageHero crumbs={crumbs} eyebrow={`${pillarLabel[d.pillar]} · ${d.client}`} title={d.title} lede={d.summary} />
+  <section class="section">
+    <div class="container post-grid">
+      <article class="prose"><Content /></article>
+      <aside class="stack">
+        {d.metrics.map((m) => <div><p class="meta">{m.label}</p><p style="font:700 var(--kd-step-3)/1 var(--kd-font-display)">{m.value}</p></div>)}
+        {d.stack.length > 0 && <p class="meta">{d.stack.join(' · ')}</p>}
+        {pillar && <a class="link-arrow" href={pillar.href}>{pillar.name}</a>}
+      </aside>
+    </div>
+  </section>
+  {d.quote && <section class="section-tight surface"><div class="narrow"><figure class="quote"><blockquote style="margin:0"><p>“{d.quote}”</p></blockquote><footer>Client review{d.rating ? ` · ${d.rating.toFixed(1)} ★` : ''}</footer></figure></div></section>}
+  <AuditCTA />
+</BaseLayout>

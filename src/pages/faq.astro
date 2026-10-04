@@ -1,0 +1,30 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import FAQList from '../components/FAQList.astro';
+import AuditCTA from '../components/AuditCTA.astro';
+import { prices } from '../data/site';
+
+
+const crumbs = [{ name: 'Home', path: '/' }, { name: 'FAQ', path: '/faq/' }];
+const faq = [
+  { q: 'Is Khaotic Digital a team?', a: 'No, it’s just me, Jonathan Sumner.\n\nI used to run a HubSpot partner agency and left the partner program, because that model fits sales-led agencies and I’m a developer. So there are no employees, no offshore contractors and no account managers. You work directly with the engineer, and you get straight answers from the person doing the work.' },
+  { q: 'How do you compare to an agency?', a: 'An agency sells you a team; I am the senior engineer that team would hand the hard part to. You get one accountable person who designs the system and writes the code, without locked contracts or vague deliverables.\n\nI regularly work with clients who were told something wasn’t possible, or was far more complicated than it needed to be.' },
+  { q: 'What’s a Systems Audit?', a: `A paid, fixed-fee diagnostic (${prices.audit}) of your CRM, pipeline, integrations and AI stack. You get a prioritized roadmap with issues ranked by impact and effort, the quick wins, and a scoped plan for the bigger fixes. It’s yours to keep whether or not you build with me.` },
+  { q: 'How do you price your work?', a: `Openly. The Systems Audit is ${prices.audit}, fixed. Builds are fixed-scope, from ${prices.buildFrom}, and priced from the audit roadmap so you know the number before work starts. Retainers start at ${prices.partnerRetainerFrom}. Small fixes, screenshare consults, walkthroughs and coaching are billed hourly from ${prices.hourlyFrom}.` },
+  { q: 'Can I book a single session or walkthrough?', a: `Yes. A 30- or 60-minute screenshare is the quickest way to get a second opinion, talk a decision through, or have something shown step by step on your own screen. No account access needed. From ${prices.hourlyFrom}.` },
+  { q: 'Do you only write code?', a: 'No. Plenty of jobs only need the platform configured properly (pipelines, workflows, reports, settings), and then that’s what I do. I also coach and train teams to run their systems themselves. Code is for what configuration can’t reach.' },
+  { q: 'Fixed price or hourly?', a: 'Both, in their place. Open-ended work billed by the hour suits small fixes. Bigger work gets scoped by the audit first, which makes a fixed price fair to both sides because the surprises turn up before the quote.' },
+  { q: 'Do you work on retainer?', a: `Yes, for ongoing work. The Embedded Systems Partner retainer (from ${prices.partnerRetainerFrom}) makes me your on-call senior engineer for the revenue stack; there’s also a fractional head-of-systems option and a lighter care plan. See the retainers page.` },
+  { q: 'Can you productionize our AI-built app?', a: 'Yes. The AI-App Hardening Sprint takes a prototype built with AI tools to production: architecture, auth, data model, tests, deployment, cost controls and the governance it was missing.' },
+  { q: 'Do you only work in HubSpot?', a: 'No. HubSpot is the platform I know deepest and the one most of my clients run. I also work in Python and Django, Next.js, and the APIs your stack uses.' },
+  { q: 'Are my integrations affected by HubSpot’s API and app deprecations?', a: 'They are if they use legacy private apps, classic CRM cards, OAuth v1 or the v1–v3 APIs. HubSpot retires those between October 2026 and September 2027. The Systems Audit lists exactly what’s affected and what the move costs.' },
+  { q: 'How do we communicate, and how do I pay?', a: 'Email, your Slack or Teams, and video calls when something needs talking through. You can hire me through Upwork, which handles billing, or directly, in which case I invoice with a detailed breakdown of the work.' },
+  { q: 'Do you work with agencies?', a: 'Yes. I take on builds for agencies that sell platform work but don’t have a senior engineer, and I stay out of the client relationship.' },
+];
+---
+<BaseLayout title="FAQ | Khaotic Digital" description="Straight answers about working with Jonathan Sumner: who you work with, how pricing works, the Systems Audit, retainers, AI builds and platform deprecations." crumbs={crumbs} faq={faq}>
+  <PageHero crumbs={crumbs} eyebrow="FAQ" title="Straight answers." lede="About working with me, how pricing works, and what happens first." />
+  <section class="section"><div class="narrow"><FAQList items={faq} /></div></section>
+  <AuditCTA />
+</BaseLayout>

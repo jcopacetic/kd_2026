@@ -1,0 +1,155 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from './PageHero.astro';
+import FAQList from './FAQList.astro';
+import AuditCTA from './AuditCTA.astro';
+import PillarCards from './PillarCards.astro';
+import WaysToWork from './WaysToWork.astro';
+import { service, ids } from '../lib/schema';
+import { pillars, pillarLabel, prices, type Pillar } from '../data/site';
+
+type Price = { label: string; prefix?: string; amount: string; note: string; featured?: boolean };
+interface Props {
+  pillar: Exclude<Pillar, 'website'>;
+  seoTitle: string;
+  description: string;
+  h1: string;
+  lede: string;
+  problems: string[];
+  builds: { title: string; body: string }[];
+  steps: { title: string; body: string }[];
+  proof: { title: string; body: string; quote?: string }[];
+  prices: Price[];
+  faq: { q: string; a: string }[];
+  schemaPrice?: { min: number; max?: number };
+}
+const p = Astro.props;
+const meta = pillars[p.pillar];
+const crumbs = [{ name: 'Home', path: '/' }, { name: 'Services', path: '/services/' }, { name: meta.name, path: meta.href }];
+const related = (await getCollection('insights', ({ data }) => !data.draft && data.pillar === p.pillar))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 4);
+---
+<BaseLayout
+  title={p.seoTitle}
+  description={p.description}
+  crumbs={crumbs}
+  faq={p.faq}
+  about={ids.service(meta.href)}
+  schema={[service({ name: meta.name, path: meta.href, description: p.description, price: p.schemaPrice })]}
+>
+  <PageHero crumbs={crumbs} eyebrow={meta.tagline} title={p.h1} lede={p.lede}>
+    <div class="btn-row">
+      <a class="btn btn-primary" href="/audit/#book" data-track="audit_cta_click">Book a Systems Audit</a>
+      <a class="btn btn-secondary" href="#what">What I do</a>
+    </div>
+  </PageHero>
+
+  <section class="section" aria-labelledby="problem-h">
+    <div class="container split">
+      <div>
+        <span class="eyebrow">The problem</span>
+        <h2 id="problem-h">Where it usually hurts</h2>
+      </div>
+      <ul class="checks">{p.problems.map((x) => <li>{x}</li>)}</ul>
+    </div>
+  </section>
+
+  <section class="section surface" id="what" aria-labelledby="what-h">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">What I do</span>
+        <h2 id="what-h">From a settings change to a custom build</h2>
+      </div>
+      <div class="grid grid-2">
+        {p.builds.map((b) => <article class="card"><h3 style="font-size:var(--kd-step-1)">{b.title}</h3><p>{b.body}</p></article>)}
+      </div>
+    </div>
+  </section>
+
+  <WaysToWork />
+
+  <section class="section surface" aria-labelledby="how-h">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">How it works</span>
+        <h2 id="how-h">From diagnosis to production</h2>
+      </div>
+      <ol class="steps steps-row">{p.steps.map((s) => <li><h3>{s.title}</h3><p>{s.body}</p></li>)}</ol>
+    </div>
+  </section>
+
+  {p.proof.length > 0 && (
+    <section class="section" aria-labelledby="proof-h">
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow">Proof</span>
+          <h2 id="proof-h">Client work</h2>
+        </div>
+        <div class="grid grid-2">
+          {p.proof.map((x) => (
+            <article class="card">
+              <h3 style="font-size:var(--kd-step-1)">{x.title}</h3>
+              <p>{x.body}</p>
+              {x.quote && <p style="color:var(--kd-text);font-family:var(--kd-font-display);font-weight:500">“{x.quote}”</p>}
+            </article>
+          ))}
+        </div>
+        <div class="btn-row"><a class="link-arrow" href="/work/">See all work</a></div>
+      </div>
+    </section>
+  )}
+
+  <section class="section surface" aria-labelledby="price-h">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Pricing</span>
+        <h2 id="price-h">Published prices.</h2>
+        <p class="lede">Bigger work is scoped from the Systems Audit, so you know the number before it starts. Quick questions and coaching are booked by the hour.</p>
+      </div>
+      <div class="grid grid-4">
+        {[...p.prices, { label: 'Sessions', prefix: 'From', amount: prices.hourlyFrom, note: 'Screenshare consults, walkthroughs and coaching. No account access needed.' }].map((x) => (
+          <article class:list={['price-card', { featured: x.featured }]}>
+            <h3 style="font-size:var(--kd-step-1);margin:0">{x.label}</h3>
+            <p class="amount">{x.prefix && <small>{x.prefix}</small>}{x.amount}</p>
+            <p>{x.note}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="faq-h">
+    <div class="narrow">
+      <span class="eyebrow">Questions</span>
+      <h2 id="faq-h">{meta.name}: common questions</h2>
+      <FAQList items={p.faq} />
+    </div>
+  </section>
+
+  {related.length > 0 && (
+    <section class="section surface" aria-labelledby="related-h">
+      <div class="container">
+        <div class="section-head"><span class="eyebrow">Insights · {pillarLabel[p.pillar]}</span><h2 id="related-h">Further reading</h2></div>
+        <div class="grid grid-2">
+          {related.map((r) => (
+            <article class="card card-link">
+              <h3 style="font-size:var(--kd-step-1)"><a class="stretched" href={`/insights/${r.id}/`} style="color:inherit;text-decoration:none">{r.data.title}</a></h3>
+              <p>{r.data.description}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <AuditCTA />
+
+  <section class="section" aria-labelledby="other-h">
+    <div class="container">
+      <div class="section-head"><span class="eyebrow">Also</span><h2 id="other-h">The rest of the system</h2></div>
+      <PillarCards exclude={p.pillar} />
+    </div>
+  </section>
+</BaseLayout>

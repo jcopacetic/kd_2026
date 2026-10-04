@@ -1,0 +1,21 @@
+---
+import { prices } from '../data/site';
+interface Props { heading?: string; body?: string }
+const {
+  heading = 'Not sure where the bottleneck is?',
+  body = 'Start with a Systems Audit. It’s a fixed-fee review that ends with a prioritized roadmap, which you can carry out with me or with anyone else.',
+} = Astro.props;
+---
+<section class="section on-ink pattern-status" aria-labelledby="audit-cta-h">
+  <div class="container">
+    <div class="section-head" style="margin-bottom:0">
+      <span class="eyebrow"><span class="dot"></span>Systems Audit · {prices.audit}</span>
+      <h2 id="audit-cta-h">{heading}</h2>
+      <p class="lede">{body}</p>
+      <div class="btn-row">
+        <a class="btn btn-primary" href="/audit/#book" data-track="audit_cta_click">Book a Systems Audit</a>
+        <a class="btn btn-secondary" href="/audit/">What you get</a>
+      </div>
+    </div>
+  </div>
+</section>

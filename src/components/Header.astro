@@ -1,0 +1,35 @@
+---
+import Logo from './Logo.astro';
+const nav = [
+  { href: '/services/', label: 'Services' },
+  { href: '/work/', label: 'Work' },
+  { href: '/audit/', label: 'Audit' },
+  { href: '/insights/', label: 'Insights' },
+  { href: '/about/', label: 'About' },
+];
+const path = Astro.url.pathname;
+const current = (href: string) => (path === href || (href !== '/' && path.startsWith(href)) ? 'page' : undefined);
+---
+<header class="site-header">
+  <div class="container bar">
+    <a class="brand" href="/" aria-label="Khaotic Digital — home"><Logo /></a>
+    <nav class="nav" aria-label="Main">
+      <ul>
+        {nav.map((n) => <li><a href={n.href} aria-current={current(n.href)}>{n.label}</a></li>)}
+      </ul>
+      <a class="btn btn-primary" href="/audit/#book">Book an Audit</a>
+    </nav>
+    <details class="menu">
+      <summary aria-label="Open menu">Menu</summary>
+      <div class="menu-panel">
+        <nav aria-label="Main (mobile)">
+          <ul>
+            {nav.map((n) => <li><a href={n.href} aria-current={current(n.href)}>{n.label}</a></li>)}
+            <li><a href="/contact/">Contact</a></li>
+          </ul>
+        </nav>
+        <a class="btn btn-primary" href="/audit/#book">Book an Audit</a>
+      </div>
+    </details>
+  </div>
+</header>

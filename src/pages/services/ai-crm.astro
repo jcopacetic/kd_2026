@@ -1,0 +1,51 @@
+---
+import ServicePage from '../../components/ServicePage.astro';
+import { prices } from '../../data/site';
+---
+<ServicePage
+  pillar="ai-crm"
+  seoTitle="AI in Your CRM: In Production, Not a Demo | Khaotic Digital"
+  description="Language models wired into CRM workflows, MCP connectors with scoped permissions, and AI-built prototypes taken to production with evals and cost limits."
+  h1="AI in your CRM, running on production data"
+  lede="AI pilots tend to work in the demo and fail on messy CRM records. I connect language models to the workflows where your customer data already moves, and I harden prototypes that were built quickly with AI tools."
+  problems={[
+    'The pilot looked good in the demo and broke on your actual CRM data.',
+    'Someone built a prototype with an AI app builder, and now customers need to use it.',
+    'You want agents reading and writing CRM records without overwriting the wrong ones.',
+    'Model costs change month to month and nobody is checking the outputs.',
+    'The CRM’s built-in AI covers part of the job and the gap is unclear.',
+  ]}
+  builds={[
+    { title: 'Strategy sessions', body: 'A working session to find where AI will pay off in your stack, and what your data needs before anything gets built.' },
+    { title: 'Models in your workflows', body: 'Enrichment, routing, summaries and first drafts, run inside the steps your data already passes through, with results written back where people work.' },
+    { title: 'Prototype to production', body: 'Taking an app built with AI tools through architecture, auth, data model, tests and deployment, and adding the governance it skipped.' },
+    { title: 'MCP connectors', body: 'AI tools connected to CRM data through MCP servers, with scoped permissions, limits on writes and an audit log.' },
+    { title: 'Data readiness', body: 'De-duplicating, cleaning and permissioning records before an agent can touch them. Bad data gets worse faster once AI is writing to it.' },
+    { title: 'Evals and cost control', body: 'Tests that catch bad outputs before customers see them, usage budgets with alerts, and a plan for when a model is retired.' },
+    { title: 'Built-in AI features', body: 'Getting the CRM’s own AI (HubSpot Breeze, for example) working across your stack, or replacing it where a custom workflow does the job better.' },
+    { title: 'Coaching on AI tools', body: 'Hands-on sessions for your team on AI assistants and the CRM’s AI features, using your own data and workflows.' },
+  ]}
+  steps={[
+    { title: 'Audit', body: 'Where AI fits in your stack, and what the data needs first.' },
+    { title: 'Harden or build', body: 'A fixed two-week sprint, or a scoped build.' },
+    { title: 'Ship', body: 'To production with evals, monitoring and spending limits.' },
+    { title: 'Govern (optional)', body: 'An AI-Agent Integration retainer for ongoing oversight.' },
+  ]}
+  proof={[
+    { title: 'Application portal for an AI startup', body: 'Built from scratch in Django over 169 hours, from the first commit to a working product.', quote: 'A spectacular engineer… instantaneous value… hit the ground running on day one.' },
+  ]}
+  prices={[
+    { label: 'AI-App Hardening Sprint', prefix: 'From', amount: prices.aiSprintFrom, note: `Two-week fixed sprint; ${prices.aiSprintRange} by scope.`, featured: true },
+    { label: 'AI-Agent Integration retainer', amount: prices.aiRetainer, note: 'Ongoing governance of AI running in your CRM.' },
+    { label: 'Custom AI build', amount: prices.buildRange, note: 'Scoped and priced from the Systems Audit.' },
+  ]}
+  schemaPrice={{ min: 9000 }}
+  faq={[
+    { q: 'Can you productionize our AI-built app?', a: 'Yes, that’s what the hardening sprint covers. I review the architecture, fix what won’t hold up under real users and data, add tests and monitoring, and deploy it properly.' },
+    { q: 'Is it safe to connect ChatGPT or Claude to our CRM?', a: 'It can be. The risk sits in permissions and data quality more than in the connection itself. I limit what an agent can read and write, log its changes, and clean the data first.' },
+    { q: 'Should we use the CRM’s built-in AI or build our own?', a: 'Use the built-in features where they cover the job, since they cost less to run. Build your own when you need custom logic, other data sources, or control over the model and its cost.' },
+    { q: 'Can you train our team on AI tools?', a: 'Yes. Coaching sessions cover AI assistants and your CRM’s AI features on your own data and workflows: what to trust, what to check, and what to keep disconnected.' },
+    { q: 'What does it cost to run?', a: 'That depends on volume and the model you choose. Every build includes a usage budget and alerts, so you set the spending limit up front.' },
+    { q: 'Do you work with startups?', a: 'Yes. My flagship project is an application portal I built from scratch for an AI startup.' },
+  ]}
+/>
