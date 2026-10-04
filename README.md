@@ -68,7 +68,7 @@ Requires Node 22.12+.
 - [ ] Optional: re-run the image-format comparison with your own image and add it to the image optimization post (the old Mario still was removed as copyrighted material).
 
 **Deploy**
-- [x] Vercel project `kd-2026` (repo root is `site/`); `khaoticdigital.com` + `www` added 2026-10-04 (www → apex via `vercel.json`). DNS switch at DigitalOcean pending.
+- [x] Vercel project `kd-2026` (repo root is `site/`); `khaoticdigital.com` + `www` added 2026-10-04 DNS switched at DigitalOcean (A @ → 216.150.1.1 + 216.150.16.1, CNAME www → Vercel); cert covers apex + www; www → apex is a 308 domain redirect in Vercel. **Launched 2026-10-04.** Keep the old droplet (64.23.177.213) about a week as a fallback, then shut it down.
 - [ ] On the first preview deploy, confirm `vercel.json` headers apply and spot-check
       redirects: `/get-in-touch/`, `/frequently-asked-questions/`, `/resources/<slug>/`,
       `/kd-insights/<anything>`.
