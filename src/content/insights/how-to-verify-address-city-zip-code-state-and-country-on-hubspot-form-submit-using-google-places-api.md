@@ -10,9 +10,10 @@ legacyUrl: "/insights/how-to-verify-address-city-zip-code-state-and-country-on-h
 gsc12mo: "6 clicks / 1,393 impr / pos 11.6"
 ---
 
-<!-- TODO(jonathan): run the custom code action against a test contact (one good US address,
-     one with a missing unit, one nonsense address) and confirm the outputs and the branch
-     before publishing. Then delete this comment. -->
+<!-- TODO(jonathan): code run against a mocked Address Validation API (13 cases, 2026-10-04).
+     Still needs a live run with a real key: a good US address, the same without its unit, a
+     made-up one; confirm the verdicts, the branch, and that Edit record accepts the dropdown
+     values. Then delete this comment. -->
 
 The most reliable way to verify an address from a HubSpot form is after the submission: a workflow sends the address to Google's Address Validation API in a custom code action, saves the standardized version when Google accepts it, and flags it for a person when it doesn't. Checking in the browser before submit is no longer practical with HubSpot's updated forms, for reasons covered below.
 
@@ -44,7 +45,7 @@ Create a contact property called **Address check** (internal name `address_check
 | `FIX` | Significant problems. The address needs correcting. |
 | `NOT_CHECKED` | Couldn't be checked (unsupported country, missing data, or an API error). |
 
-The first four are the values Google returns in `verdict.possibleNextAction`, so the property maps straight onto the API's answer.
+The first four are the values Google returns in `verdict.possibleNextAction`, so the property maps straight onto the API's answer. Google still labels that field as preview, and `CONFIRM_ADD_SUBPREMISES` is only returned for US addresses, so expect plain `CONFIRM` elsewhere.
 
 ## Step 2: Build the workflow
 
@@ -81,18 +82,21 @@ exports.main = async (event, callback) => {
   let result;
   try {
     const res = await axios.post(
-      `https://addressvalidation.googleapis.com/v1:validateAddress?key=${process.env.GOOGLE_ADDRESS_KEY}`,
-      { address: { regionCode, addressLines: lines }, enableUspsCass: regionCode === 'US' },
-      { timeout: 10000 },
+      'https://addressvalidation.googleapis.com/v1:validateAddress',
+      { address: { regionCode, addressLines: lines } },
+      // The key goes in a header, not the URL, so it can't end up in an error log.
+      { headers: { 'X-Goog-Api-Key': process.env.GOOGLE_ADDRESS_KEY }, timeout: 10000 },
     );
-    result = res.data.result;
+    result = res.data?.result;
   } catch (err) {
     const status = err.response?.status;
     // Rate limits and server errors: throw so HubSpot retries the action.
     if (status === 429 || status >= 500) throw err;
-    // Anything else (an unsupported country, a bad request): leave the address alone.
+    // Anything else (a bad key, an unsupported country, a timeout): log why, leave the address alone.
+    console.error('Address Validation failed', status ?? err.code, err.response?.data?.error?.message ?? '');
     return callback({ outputFields: { check: 'NOT_CHECKED' } });
   }
+  if (!result) return callback({ outputFields: { check: 'NOT_CHECKED' } });
 
   const postal = result.address?.postalAddress ?? {};
   callback({
@@ -110,7 +114,8 @@ exports.main = async (event, callback) => {
 Some notes on the choices in there:
 
 - **Region code.** HubSpot's Country property is usually free text like "United States", while the API wants a two-letter code. Add the names your forms actually collect to the `REGION` map. If a country isn't in the map, its name goes in as an extra address line instead.
-- **US addresses** get `enableUspsCass`, which runs USPS CASS standardization on top of Google's own checks.
+- **USPS CASS.** The API can also return USPS data for US addresses (`enableUspsCass: true` in the request, results in `uspsData`). It doesn't change the verdict or the standardized address this code uses, so it's left off. Turn it on if you want to extend the check with USPS delivery-point confirmation.
+- **Logging.** When a request fails for a reason other than a retry, the reason is written to the action's logs. A wrong or restricted key otherwise just shows up as every contact getting `NOT_CHECKED`.
 - **Retries.** HubSpot retries a custom code action when it throws on a 429 or 5xx error, so those errors are thrown on purpose. Every other failure returns `NOT_CHECKED` so the workflow carries on.
 - **Time limit.** Custom code actions have 20 seconds to finish. The 10-second request timeout stops one slow response from using up the whole window.
 
@@ -124,6 +129,8 @@ After the code action:
    - **CONFIRM** or **CONFIRM_ADD_SUBPREMISES:** create a task for the contact owner to confirm the address on their next call or email.
    - **FIX:** create a task, and if address accuracy matters for routing, hold the contact out of territory assignment until it's corrected.
    - **NOT_CHECKED:** do nothing, or add the contact to a list you review now and then.
+
+Copying the standardized address back changes the properties the re-enrollment trigger watches (Google returns `94043-1351` for `94043`, and `CA` for `California`), so an accepted contact runs through the workflow once more. The second check returns the same values and stops there, but expect two API requests per accepted address. If your State/Region property is a dropdown, its options must include the two-letter codes Google returns, or the copy fails.
 
 Only overwriting on `ACCEPT` matters. Replacing an address Google wasn't sure about can make a bad address worse, and the contact typed their version for a reason.
 

@@ -10,10 +10,6 @@ legacyUrl: "/insights/web-application-development-in-django-and-docker/"
 gsc12mo: "3 clicks / 2,556 impr / pos 12.3"
 ---
 
-<!-- TODO(jonathan): generate a fresh project with the current template and run every command
-     in this post once. The template changes often; fix anything that has moved. Then delete
-     this comment. -->
-
 The quickest way to start a production-ready Django app in Docker is [Cookiecutter Django](https://github.com/cookiecutter/cookiecutter-django). Generate a project with `cookiecutter gh:cookiecutter/cookiecutter-django`, build it with `docker compose -f docker-compose.local.yml build`, start it with `up`, and run every Django command through `docker compose ... run --rm django`. The template comes with users and authentication, Postgres, email, static files, tests and a production setup already wired together, so you spend your time on the app itself.
 
 This is the setup I use for client apps. It isn't simple, because web apps aren't simple, but it's a repeatable path from an empty folder to a deployed project. Below: what to learn first, the options I pick, the commands I use every day, how to add apps and packages, and how it gets to production.
@@ -34,12 +30,15 @@ I came to Django from design, Photoshop and HTML, and the template took me a whi
 
 ## Step 1: Generate the project
 
-Install Cookiecutter, then point it at the template:
+Install Cookiecutter, then point it at the template. I install command-line Python tools with [uv](https://docs.astral.sh/uv/), which keeps each one in its own environment. A plain `pip install` fails on current Ubuntu and Debian, which block installing packages into the system Python.
 
 ```bash
-pip install cookiecutter
+curl -LsSf https://astral.sh/uv/install.sh | sh    # one time; see uv's docs for Windows and macOS
+uv tool install cookiecutter
 cookiecutter gh:cookiecutter/cookiecutter-django
 ```
+
+Have Docker installed and running before this step. When you answer `y` to `use_docker`, the template builds a small Docker image while it generates the project, to lock the Python dependencies.
 
 It asks a series of questions. These are my usual answers and why:
 
@@ -68,9 +67,11 @@ It asks a series of questions. These are my usual answers and why:
 
 ## Step 2: Set up Git and pre-commit
 
-The template comes with [pre-commit](https://pre-commit.com/) checks that format your code and catch problems like unused imports every time you commit. Install pre-commit on your machine, then:
+The template comes with [pre-commit](https://pre-commit.com/) checks that format your code and catch problems like unused imports every time you commit. The checks run on your machine, not in Docker, and the template pins them to Python 3.14. Install both with uv, then set up the repository:
 
 ```bash
+uv python install 3.14
+uv tool install pre-commit
 cd your_project
 git init
 pre-commit install
@@ -78,7 +79,7 @@ pre-commit install
 
 Now a commit runs the checks first. If any fail, they either fix the files themselves or tell you exactly what to change. Fix it, `git add` again and commit again. After a long session across many files, it sometimes takes me three or four rounds. Nearly every remaining error is a one-line fix, so it's quicker to fix them all at once than to keep re-running.
 
-If pre-commit won't install cleanly (I've lost hours to this), install it inside a [virtual environment](https://docs.python.org/3/library/venv.html) and run it from there. Don't skip it for long: my deploys go through the Git repository, and the checks keep what gets pushed clean.
+If your first commit fails with `failed to find interpreter for ... python3.14`, the checks can't find Python 3.14; run `uv python install 3.14` and commit again. Don't skip the checks for long: my deploys go through the Git repository, and the checks keep what gets pushed clean.
 
 ## Step 3: Build and start the stack
 
@@ -142,15 +143,16 @@ That way the package is part of the image, and production gets exactly the same 
 Create the app with `startapp`, then move it into the project's inner package (the folder named after your project), where the template keeps its apps:
 
 ```bash
-docker compose run --rm django python manage.py startapp listings
+docker compose run --rm --user "$(id -u):$(id -g)" django python manage.py startapp listings
 mv listings your_project/
 ```
+
+The `--user` part matters on Linux. The development container runs as root, so without it the new files belong to root, `mv` fails with "Permission denied", and you can't edit them without `sudo`. Docker Desktop on macOS and Windows maps file ownership for you, so there the flag is harmless. Use it for `makemigrations` too, for the same reason.
 
 Then make two edits. In `your_project/listings/apps.py`, include the project name in the app's `name`:
 
 ```python
 class ListingsConfig(AppConfig):
-    default_auto_field = "django.db.models.BigAutoField"
     name = "your_project.listings"
 ```
 
@@ -171,13 +173,63 @@ A **model** is a Python class that maps to a database table. A comment form, a u
 
 Most beginner tutorials teach function-based views. Class-based views can look harder, but for this kind of work they're more like training wheels: the GET and POST handling is built in, and you set a few attributes.
 
+Here's a small but complete example: listings that any logged-in user can create, and only their owner can edit. Start with the model in `your_project/listings/models.py`:
+
 ```python
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.conf import settings
+from django.db import models
+
+
+class Listing(models.Model):
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="listings",
+    )
+    title = models.CharField(max_length=200)
+    description = models.TextField(blank=True)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created"]
+
+    def __str__(self):
+        return self.title
+```
+
+The form, in a new `forms.py` next to it. It leaves out `owner` on purpose:
+
+```python
+from django import forms
+
+from .models import Listing
+
+
+class ListingForm(forms.ModelForm):
+    class Meta:
+        model = Listing
+        # No "owner": the view sets it, so users can't assign listings to someone else.
+        fields = ["title", "description", "price"]
+```
+
+The views, in `views.py`:
+
+```python
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import UserPassesTestMixin
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, UpdateView
+from django.views.generic import CreateView
+from django.views.generic import ListView
+from django.views.generic import UpdateView
 
 from .forms import ListingForm
 from .models import Listing
+
+
+class ListingListView(ListView):
+    model = Listing
+    template_name = "listings/listing_list.html"
 
 
 class ListingCreateView(LoginRequiredMixin, CreateView):
@@ -200,6 +252,72 @@ class ListingUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     def test_func(self):
         return self.get_object().owner == self.request.user  # only the owner can edit
 ```
+
+Give the app its own URLs in a new `urls.py`. The `app_name` is what makes names like `listings:list` work:
+
+```python
+from django.urls import path
+
+from . import views
+
+app_name = "listings"
+urlpatterns = [
+    path("", views.ListingListView.as_view(), name="list"),
+    path("new/", views.ListingCreateView.as_view(), name="create"),
+    path("<int:pk>/edit/", views.ListingUpdateView.as_view(), name="update"),
+]
+```
+
+and include them in `config/urls.py`, next to the existing `users/` line:
+
+```python
+    path("listings/", include("your_project.listings.urls")),
+```
+
+Each view needs a template. They go in `your_project/templates/listings/`. `listing_form.html` serves both create and edit:
+
+```html
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>{% if object %}Edit listing{% else %}New listing{% endif %}</h1>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_div }}
+    <button type="submit" class="btn btn-primary">Save</button>
+  </form>
+{% endblock content %}
+```
+
+and `listing_list.html`:
+
+```html
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>Listings</h1>
+  <a href="{% url 'listings:create' %}" class="btn btn-primary">New listing</a>
+  <ul>
+    {% for listing in object_list %}
+      <li>
+        {{ listing.title }} ({{ listing.price }})
+        {% if listing.owner == request.user %}<a href="{% url 'listings:update' listing.pk %}">Edit</a>{% endif %}
+      </li>
+    {% empty %}
+      <li>No listings yet.</li>
+    {% endfor %}
+  </ul>
+{% endblock content %}
+```
+
+Finally, create and apply the migration for the new model:
+
+```bash
+docker compose run --rm --user "$(id -u):$(id -g)" django python manage.py makemigrations listings
+docker compose run --rm django python manage.py migrate
+```
+
+Open `http://localhost:8000/listings/`, log in, and add a listing. Log in as a second user and try its edit URL: you'll get a 403, because `test_func` only lets the owner through.
 
 The methods I override most:
 

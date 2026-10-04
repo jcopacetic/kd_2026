@@ -10,9 +10,10 @@ legacyUrl: "/insights/smart-address-autocomplete-in-hubspot-forms-using-google-p
 gsc12mo: "110 clicks / 12,185 impr / pos 18.7"
 ---
 
-<!-- TODO(jonathan): before publishing, run the final snippet on a test portal with an
-     updated-editor form using the standard (iframe) embed and confirm setFieldValue fills
-     address/city/state/zip/country. Then delete this comment. -->
+<!-- TODO(jonathan): code checked against HubSpot's embed source and Google's docs (2026-10-04).
+     Still needs one live run on a test portal: updated-editor form, standard embed, pick an
+     address WITH a unit; confirm all five fields fill (unit included) and the contact saves.
+     Also confirm includedPrimaryTypes still returns suggestions. Then delete this comment. -->
 
 To add address autocomplete to a HubSpot form today, put Google's `PlaceAutocompleteElement` next to the form and copy the selected address into the form with HubSpot's `setFieldValue()`. The older approach, where you attach Google's widget directly to the form's address input, stopped being a good option in 2025 for two reasons covered below.
 
@@ -75,6 +76,7 @@ If the page has more than one form, check `hubspotForm.getFormId()` against the 
 
     const search = new PlaceAutocompleteElement();
     search.includedRegionCodes = ['us', 'ca']; // limit suggestions to the countries you serve
+    search.includedPrimaryTypes = ['street_address', 'premise', 'subpremise']; // addresses, not businesses
     document.getElementById('address-search').append(search);
 
     search.addEventListener('gmp-select', async ({ placePrediction }) => {
@@ -82,21 +84,27 @@ If the page has more than one form, check `hubspotForm.getFormId()` against the 
       await place.fetchFields({ fields: ['addressComponents'] });
 
       const part = (type, short = false) => {
-        const c = place.addressComponents.find((component) => component.types.includes(type));
+        const c = (place.addressComponents || []).find((component) => component.types.includes(type));
         return c ? (short ? c.shortText : c.longText) : '';
       };
 
       const values = {
-        street: [part('street_number'), part('route')].filter(Boolean).join(' '),
+        street: [[part('street_number'), part('route')].filter(Boolean).join(' '), part('subpremise')]
+          .filter(Boolean)
+          .join(', '), // "1600 Main Street, Apt 4B"
         city: part('locality') || part('postal_town') || part('sublocality'),
         state: part('administrative_area_level_1', true), // "TX", not "Texas"
         zip: part('postal_code'),
         country: part('country'),
       };
 
-      if (!hubspotForm) return;
+      if (!hubspotForm) {
+        console.warn('Address picked before the HubSpot form was ready');
+        return;
+      }
       for (const [key, fieldName] of Object.entries(ADDRESS_FIELDS)) {
-        hubspotForm.setFieldValue(fieldName, values[key]);
+        // Skip parts Google didn't return, so they don't wipe out what the visitor typed.
+        if (values[key]) hubspotForm.setFieldValue(fieldName, values[key]);
       }
     });
   }
@@ -110,10 +118,13 @@ If the page has more than one form, check `hubspotForm.getFormId()` against the 
 
 A few details in there are worth explaining:
 
-- **Street address.** Google returns the house number and the street as separate components, so they're joined into one line for HubSpot's `address` property.
+- **Street address.** Google returns the house number, the street and any unit (`subpremise`) as separate components, so they're joined into one line for HubSpot's `address` property: "1600 Main Street, Apt 4B". If you'd rather keep the unit in its own field, add an address-line-2 property to the form and map `subpremise` to it instead.
+- **Addresses only.** `includedPrimaryTypes` keeps businesses and landmarks out of the suggestions. Their results often have no street number, which would leave the address field half filled.
 - **City.** `locality` covers most addresses. UK addresses often use `postal_town` instead, and some cities only return `sublocality`, so the code falls back through all three.
 - **State.** I use the short form (`TX`) because that's what most sales teams filter on. If your `state` property is a dropdown, the value has to match one of its options exactly, so change it to `longText` if your options are full names.
 - **Country.** The same rule applies if `country` is a dropdown. Check the option values in the property settings.
+- **Empty parts.** If Google doesn't return a part (some rural addresses have no ZIP, for example), that field is left as it was rather than cleared.
+- **Content Security Policy.** If your site sends a CSP header, allow `https://maps.googleapis.com` in `script-src`, `https://places.googleapis.com` and `https://maps.googleapis.com` in `connect-src`, and HubSpot's form hosts (`js.hsforms.net`, `forms.hsforms.com`) in `script-src` and `frame-src`. Otherwise the browser blocks the scripts and nothing happens.
 
 ## Country or state only
 
@@ -122,7 +133,7 @@ The first version of this guide also autocompleted standalone country and state 
 ## Testing it
 
 1. Load the page with the browser console open and confirm there are no errors from either script.
-2. Type part of an address, pick a suggestion, and check that the address, city, state, ZIP and country fields fill in.
+2. Type part of an address that has an apartment or suite number, pick a suggestion, and check that the address (including the unit), city, state, ZIP and country fields fill in.
 3. Edit one of the filled fields by hand to make sure visitors can still correct it.
 4. Submit, then open the contact record and confirm all five properties were saved.
 5. In Google Cloud, check that requests appear under Places API (New), and set a budget alert while you're there.
