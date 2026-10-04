@@ -47,6 +47,8 @@ export default defineConfig({
       GMAIL_APP_PASSWORD: envField.string({ context: 'server', access: 'secret', optional: true }),
       FORM_NOTIFY_TO: envField.string({ context: 'server', access: 'secret', optional: true }),
       TURNSTILE_SECRET_KEY: envField.string({ context: 'server', access: 'secret', optional: true }),
+      // Public (it's in the page HTML anyway). Read at build time, so redeploy after changing it.
+      TURNSTILE_SITE_KEY: envField.string({ context: 'server', access: 'public', optional: true }),
     },
   },
   // Content-Security-Policy. Astro hashes every script and stylesheet it renders and emits a

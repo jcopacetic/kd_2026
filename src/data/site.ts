@@ -29,8 +29,6 @@ export const site = {
   /** HubSpot tracking script (loaded only after consent). Off: forms now email directly.
    *  Set to '21372035' to turn it back on. */
   hubspotPortalId: '',
-  /** Cloudflare Turnstile public site key; empty = widget not rendered. */
-  turnstileSiteKey: '',
 } as const;
 
 export const proof = {

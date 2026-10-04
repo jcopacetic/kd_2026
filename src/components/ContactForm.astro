@@ -2,6 +2,7 @@
 // Posts to /api/contact, which emails the submission to Jonathan. Works without JS (server
 // redirects to /contact/thanks/); with JS it submits in place and fires GA4 events.
 import { site } from '../data/site';
+import { TURNSTILE_SITE_KEY } from 'astro:env/server';
 interface Props { intent?: 'audit' | 'website-audit' | 'contact' }
 const { intent = 'contact' } = Astro.props;
 const uid = `f-${intent}`;
@@ -37,14 +38,29 @@ const messageLabel = {
     </select>
   </div>
   <div class="hp" aria-hidden="true"><label>Leave this empty <input name="company_url" tabindex="-1" autocomplete="off" /></label></div>
-  {site.turnstileSiteKey && <div class="cf-turnstile" data-sitekey={site.turnstileSiteKey}></div>}
+  {/* Cloudflare Turnstile: invisible unless Cloudflare wants the visitor to click a checkbox. */}
+  {TURNSTILE_SITE_KEY && <div class="cf-turnstile" data-sitekey={TURNSTILE_SITE_KEY} data-action={intent} data-theme="auto" data-size="flexible" data-appearance="interaction-only" data-turnstile></div>}
   <div><button class="btn btn-primary" type="submit">{intent === 'contact' ? 'Send' : 'Request the audit'}</button></div>
   <p class="form-status" role="status" aria-live="polite" data-status></p>
   <p class="muted" style="font-size:var(--kd-step--1);margin:0">I reply within {site.replyTime}. Your message comes straight to my inbox and isn’t shared (see the <a href="/privacy/">privacy notice</a>).</p>
 </form>
-{site.turnstileSiteKey && <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>}
+{TURNSTILE_SITE_KEY && <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>}
 
 <script>
+  type Turnstile = { reset: (el: HTMLElement) => void };
+  const turnstile = () => (window as unknown as { turnstile?: Turnstile }).turnstile;
+
+  /** Turnstile fills a hidden input when it has a token; wait briefly if it isn't there yet. */
+  async function turnstileToken(form: HTMLFormElement, timeoutMs = 10_000) {
+    const start = Date.now();
+    for (;;) {
+      const v = form.querySelector<HTMLInputElement>('[name="cf-turnstile-response"]')?.value;
+      if (v) return v;
+      if (Date.now() - start > timeoutMs) return '';
+      await new Promise((r) => setTimeout(r, 250));
+    }
+  }
+
   for (const form of document.querySelectorAll<HTMLFormElement>('[data-contact-form]')) {
     const uri = form.querySelector<HTMLInputElement>('[data-page-uri]');
     if (uri) uri.value = location.href;
@@ -57,12 +73,19 @@ const messageLabel = {
       button.disabled = true;
       status.dataset.state = '';
       status.textContent = 'Sending…';
+      const widget = form.querySelector<HTMLElement>('[data-turnstile]');
       try {
+        if (widget && !(await turnstileToken(form))) {
+          throw new Error('Couldn’t confirm you’re not a bot. If a checkbox appeared above, tick it and try again.');
+        }
         const res = await fetch(form.action, { method: 'POST', body: new FormData(form), headers: { Accept: 'application/json' } });
         const data = await res.json().catch(() => ({}));
         // 429 comes from the Vercel Firewall rate limit (5 posts / 10 min per IP), not from our API.
         if (res.status === 429) throw new Error('That’s a lot of messages in a short time. Please wait 10 minutes and try again.');
-        if (!res.ok) throw new Error(data.error || 'Something went wrong.');
+        if (!res.ok) {
+          const retry = res.status >= 500 ? ' Please try again in a few minutes.' : '';
+          throw new Error((data.error || 'Something went wrong.') + retry);
+        }
         status.dataset.state = 'ok';
         status.textContent = 'Thanks, I’ve got it. I’ll be in touch soon.';
         form.reset();
@@ -70,10 +93,12 @@ const messageLabel = {
         (window as any).kdTrack?.(intent === 'contact' ? 'contact_submitted' : 'audit_booked', { intent });
       } catch (err) {
         status.dataset.state = 'error';
-        const message = (err as Error).message;
-        status.textContent = /try again\.$/.test(message) ? message : `${message} Please try again in a few minutes.`;
+        // fetch() itself throws a TypeError when the network is down.
+        status.textContent = err instanceof TypeError ? 'Couldn’t reach the server. Check your connection and try again.' : (err as Error).message;
       } finally {
         button.disabled = false;
+        // Tokens are single-use: get a fresh one for the next submission.
+        if (widget) turnstile()?.reset(widget);
       }
     });
   }

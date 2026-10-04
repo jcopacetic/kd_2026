@@ -37,9 +37,9 @@ Requires Node 22.12+.
       if the option is missing, App passwords may be disabled in the Workspace admin console).
       Optional: `FORM_NOTIFY_TO` to send notifications elsewhere. Until set, forms reply
       "isn't connected yet". Submit one test from each form (audit, website audit, contact).
-- [ ] Recommended: Cloudflare Turnstile keys (`turnstileSiteKey` in `site.ts`,
-      `TURNSTILE_SECRET_KEY` in Vercel). Honeypot, timing, link-count and origin checks are
-      already in place; dropped submissions are logged in Vercel as `contact: dropped as spam`.
+- [ ] Cloudflare Turnstile: set `TURNSTILE_SITE_KEY` and `TURNSTILE_SECRET_KEY` in Vercel
+      (set both or neither), then redeploy; the site key is read at build time. Widget
+      hostnames: khaoticdigital.com, www.khaoticdigital.com, kd-2026.vercel.app.
 - [ ] Parked: store a copy of each submission (Supabase table, decided 2026-10-04 to wait).
       The email is currently the only record.
 - [ ] Confirm in `site.ts`: GitHub handle, reply-time promise, `$150/hr` hourly floor; add

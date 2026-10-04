@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { site } from '../data/site';
+import { TURNSTILE_SITE_KEY } from 'astro:env/server';
 const crumbs = [{ name: 'Home', path: '/' }, { name: 'Privacy', path: '/privacy/' }];
 ---
 <!-- Plain-language draft. Have it reviewed before launch. -->
@@ -10,6 +11,7 @@ const crumbs = [{ name: 'Home', path: '/' }, { name: 'Privacy', path: '/privacy/
     <p class="muted">Last updated October 2026.</p>
     <h2>What I collect</h2>
     <p><strong>Forms.</strong> When you send a form, your name, email, company or website, message and how you found me are emailed to me so I can reply. They aren’t stored on this website, and I don’t sell or share them.</p>
+    {TURNSTILE_SITE_KEY && <p><strong>Spam protection.</strong> Forms use Cloudflare Turnstile, which checks your browser for signs of a bot when the form loads (see <a href="https://www.cloudflare.com/turnstile-privacy-policy/">Cloudflare’s Turnstile privacy notice</a>).</p>}
     <p><strong>Analytics, only if you allow it.</strong> If you click “Allow” on the cookie banner, Google Analytics loads to show which pages are useful and how visitors found the site. If you don’t, it doesn’t load. You can change your choice any time from “Cookie settings” in the footer.</p>
     <h2>Your choices</h2>
     <p>Send a message through the <a href="/contact/">contact form</a> to see, correct or delete what I hold about you.</p>

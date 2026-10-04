@@ -7,6 +7,7 @@
 //   GMAIL_APP_PASSWORD    a Google app password for that mailbox (needs 2-Step Verification)
 //   FORM_NOTIFY_TO        where notifications go (defaults to GMAIL_USER)
 //   TURNSTILE_SECRET_KEY  optional; enables Cloudflare Turnstile verification
+//   TURNSTILE_SITE_KEY    public key for the widget (set both or neither)
 import type { APIRoute } from 'astro';
 import nodemailer, { type Transporter } from 'nodemailer';
 import { GMAIL_USER, GMAIL_APP_PASSWORD, FORM_NOTIFY_TO, TURNSTILE_SECRET_KEY } from 'astro:env/server';
@@ -107,18 +108,25 @@ export const POST: APIRoute = async ({ request, clientAddress, redirect, url }) 
   // Link-stuffed messages are the classic contact-form spam.
   if ((fields.message.match(URL_PATTERN) ?? []).length > 3) return dropped('too many links');
 
+  // Cloudflare Turnstile (on when TURNSTILE_SECRET_KEY is set; the widget needs TURNSTILE_SITE_KEY).
+  // Fails closed: if Cloudflare can't be reached, the submission is refused rather than let through.
   const secret = TURNSTILE_SECRET_KEY;
   if (secret) {
-    const token = str(form.get('cf-turnstile-response'), 4096);
-    const verify = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+    const token = str(form.get('cf-turnstile-response'), 2048);
+    if (!token) return fail('Couldn’t confirm you’re not a bot. Please reload the page and try again.');
+    const verify: { success?: boolean; 'error-codes'?: string[] } = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
       method: 'POST',
       body: new URLSearchParams({ secret, response: token, remoteip: clientAddress }),
       signal: AbortSignal.timeout(5_000),
     })
       .then((r) => r.json())
-      .catch(() => ({ success: false }));
-    if (!verify.success) return fail('Spam check failed. Please try again.');
+      .catch(() => ({ success: false, 'error-codes': ['siteverify-unreachable'] }));
+    if (!verify.success) {
+      console.warn(`contact: turnstile rejected (${(verify['error-codes'] ?? []).join(', ') || 'no reason given'})`);
+      return fail('Couldn’t confirm you’re not a bot. Please reload the page and try again.');
+    }
   }
+
 
   const user = GMAIL_USER;
   if (!user || !GMAIL_APP_PASSWORD) {
