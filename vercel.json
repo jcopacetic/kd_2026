@@ -1,7 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "redirects": [
-    { "source": "/:path*", "has": [{ "type": "host", "value": "www.khaoticdigital.com" }], "destination": "https://khaoticdigital.com/:path*", "permanent": true },
     { "source": "/seamless-integration-:rest(.*)", "destination": "/services/build/", "statusCode": 301 }
   ],
   "headers": [

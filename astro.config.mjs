@@ -79,7 +79,7 @@ export default defineConfig({
     shikiConfig: { themes: { light: 'github-light-high-contrast', dark: 'github-dark-high-contrast' } },
   },
   // 301 map — site-content/04 + 07, checked against the Site Planner inventory.
-  // www → apex is a Vercel domain setting (and a host rule in vercel.json), not a route.
+  // www → apex is a Vercel domain setting (project → Domains: www redirects 308 to the apex).
   redirects: {
     '/frequently-asked-questions/': r('/faq/'),
     '/get-in-touch/': r('/contact/'),
