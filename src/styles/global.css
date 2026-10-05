@@ -221,7 +221,10 @@ pre.astro-code { max-width: 100%; overflow-x: auto; padding: var(--kd-space-6); 
 .post-cover { margin: 0 0 var(--kd-space-12); max-width: 42rem; }
 .post-cover img { display: block; width: 100%; height: auto; aspect-ratio: 1200 / 630; border-radius: var(--kd-radius-md); border: 1px solid var(--kd-border-subtle); background: var(--kd-ink); }
 .post-meta { font: 400 var(--kd-step--1)/1.5 var(--kd-font-mono); color: var(--kd-text-muted); display: flex; flex-wrap: wrap; gap: 0.25em 1.25em; }
-.post-grid { display: grid; gap: var(--kd-space-12); }
+/* minmax(0, 1fr): a grid column otherwise grows to its widest child (code blocks, tables),
+   which makes the page wider than a phone screen and the browser zooms the whole page out. */
+.post-grid { display: grid; gap: var(--kd-space-12); grid-template-columns: minmax(0, 1fr); }
+.post-grid > * { min-width: 0; }
 @media (min-width: 64rem) { .post-grid { grid-template-columns: minmax(0, 1fr) 15rem; } .toc { position: sticky; top: 6rem; } }
 .toc { font-size: var(--kd-step--1); }
 .toc ol { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.5em; }
