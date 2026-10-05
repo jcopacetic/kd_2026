@@ -143,6 +143,8 @@ Both the swap UI and this API stop on **December 1, 2026**, and the classic card
 | **October 31, 2026** | Classic CRM cards fully sunset |
 | December 1, 2026 | Migrate views API and swap UI discontinued |
 
+This is one of several platform deadlines between now and 2027. I keep a single list of [every HubSpot API deadline through September 2027](/insights/hubspot-api-sunset-2027-migration-checklist/), with a guide for each.
+
 *Checked against HubSpot's developer changelog, documentation and the converter's README in October 2026. The signature check was tested against the official Node client's v3 implementation.*
 
 Sources: [Deprecating classic CRM cards](https://developers.hubspot.com/changelog/deprecating-support-for-classic-crm-cards), [Migrate a legacy CRM card to an app card](https://developers.hubspot.com/docs/apps/developer-platform/build-apps/migrate-an-app/migrate-legacy-crm-cards-to-app-cards), [Legacy CRM Card Converter](https://github.com/HubSpot/ui-extensions-examples/tree/main/legacy-card-converter), [Legacy CRM cards reference](https://developers.hubspot.com/docs/api-reference/latest/crm/extensions/crm-cards/guide), [Fetching data for UI extensions](https://developers.hubspot.com/docs/apps/developer-platform/add-features/ui-extensions/fetching-data), [Validating requests](https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/request-validation), [UI extension context](https://developers.hubspot.com/docs/apps/developer-platform/add-features/ui-extensions/ui-extensions-sdk/context), [April 2026 developer rollup](https://developers.hubspot.com/changelog/april-2026-rollup).

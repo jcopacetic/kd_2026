@@ -203,11 +203,11 @@ p { margin: 0 0 1em; text-wrap: pretty; }
 .wide-figure figcaption { font-size: var(--kd-step--1); color: var(--kd-text-muted); margin-top: 0.6em; max-width: 42rem; }
 .prose img { border-radius: var(--kd-radius-md); border: 1px solid var(--kd-border-subtle); max-width: 100%; }
 .prose blockquote { margin: 1.5em 0; padding-left: 1.25em; border-left: 3px solid var(--kd-mint-300); color: var(--kd-text-muted); }
-.prose table { border-collapse: collapse; width: 100%; font-size: var(--kd-step--1); display: block; overflow-x: auto; }
+.prose table { border-collapse: collapse; width: 100%; max-width: 100%; font-size: var(--kd-step--1); display: block; overflow-x: auto; }
 .prose th, .prose td { border: 1px solid var(--kd-border-subtle); padding: 0.5em 0.75em; text-align: left; vertical-align: top; }
 .prose hr { border: 0; border-top: 1px solid var(--kd-border-subtle); margin: 2.5em 0; }
 code, kbd, pre { font-family: var(--kd-font-mono); font-size: 0.9em; }
-:not(pre) > code { background: var(--kd-surface); border: 1px solid var(--kd-border-subtle); padding: 0.1em 0.35em; border-radius: 4px; }
+:not(pre) > code { background: var(--kd-surface); border: 1px solid var(--kd-border-subtle); padding: 0.1em 0.35em; border-radius: 4px; overflow-wrap: anywhere; }
 pre.astro-code { max-width: 100%; overflow-x: auto; padding: var(--kd-space-6); border-radius: var(--kd-radius-md); border: 1px solid var(--kd-border-subtle); line-height: 1.55; font-size: 0.875rem; position: relative; }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) .astro-code, :root:not([data-theme="light"]) .astro-code span { color: var(--shiki-dark) !important; background-color: var(--shiki-dark-bg) !important; }

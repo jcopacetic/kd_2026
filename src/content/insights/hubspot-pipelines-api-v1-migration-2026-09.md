@@ -111,6 +111,8 @@ Treat it as a bridge. Once the endpoint switch is live, move the rest of the cod
 
 If you're doing this, it's also the moment to check what else the integration calls. The rest of the numbered v1–v3 APIs go unsupported in September 2027, and an integration that touches pipelines usually touches deals, owners and properties too.
 
+Pipelines is one of several platform deadlines between now and 2027. I keep a single list of [every HubSpot API deadline through September 2027](/insights/hubspot-api-sunset-2027-migration-checklist/), with a guide for each.
+
 *Checked against HubSpot's developer changelog and API reference in October 2026. The adapter is tested against sample 2026-09 responses.*
 
 Sources: [Pipelines API v1 sunset](https://developers.hubspot.com/changelog/pipelines-api-v1-sunset), [Pipelines API (2026-09)](https://developers.hubspot.com/docs/api-reference/latest/crm/pipelines/guide), [Legacy Pipelines v1: create a pipeline](https://br.developers.hubspot.com/docs/api-reference/legacy/crm/pipelines/v1/create-pipeline), [Legacy APIs and apps: what's going unsupported and when](https://developers.hubspot.com/changelog/legacy-apis-and-legacy-apps-whats-going-unsupported-and-when), [Delete validation in 2026-09](https://developers.hubspot.com/changelog/pipeline-stage-validation-true).

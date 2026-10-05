@@ -107,6 +107,10 @@ async function introspect(token, hint = 'access_token') {
 
 For **revoking** a refresh token, for example when a customer disconnects your app, send a form-encoded POST to `/oauth/2026-03/token/revoke` with the refresh token in the body. HubSpot's migration guide describes the call but doesn't spell out the body field name, so confirm it against the current API reference before you ship it.
 
+## Why not just upgrade the SDK?
+
+Because it doesn't help yet. HubSpot's Node client (`@hubspot/api-client` 14.0.1) and Python client (`hubspot-api-client` 12.0.0) don't include the date-versioned paths, and workflow custom code actions ship with the Node client at `^10`. That's why the module above uses `fetch` directly. Keep the SDK for your other calls and route the four OAuth calls through the module until the SDK catches up.
+
 ## Which version to target
 
 HubSpot's migration guide uses **2026-03**, and it's the version that documents all three calls. The token and introspection endpoints also exist under **2026-09**, the current release, which stays supported six months longer. Either clears the February deadline. You'll also see `/oauth/v3/...` endpoints, released in January 2026, but v3 is a numbered version, and HubSpot has said numbered APIs go unsupported in September 2027, so skip it and go straight to a dated one.
@@ -120,6 +124,8 @@ HubSpot's migration guide uses **2026-03**, and it's the version that documents 
 5. Move revoke to the new endpoint and test a full disconnect.
 6. Test the whole cycle in a test account before production: install, refresh, introspect, disconnect.
 7. Ship well before February 16, 2027.
+
+OAuth is one of several platform deadlines between now and 2027. I keep a single list of [every HubSpot API deadline through September 2027](/insights/hubspot-api-sunset-2027-migration-checklist/), with a guide for each.
 
 *Checked against HubSpot's developer changelog, migration guide and OAuth reference in October 2026. The module is tested against a mock of the 2026-03 endpoints.*
 

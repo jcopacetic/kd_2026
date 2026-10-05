@@ -147,6 +147,8 @@ Log these. A warning means HubSpot stored something other than what you sent, wh
 4. **Test creates and updates in a sandbox** or test account with the same rules, on 2026-09, before switching production.
 5. **Ship the error handling first**, so the first failure in production tells you exactly what to fix.
 
+If you're moving an integration to the dated APIs anyway, I keep a single list of [every HubSpot API deadline through September 2027](/insights/hubspot-api-sunset-2027-migration-checklist/). When the error is about scopes or permissions rather than validation, see [HubSpot App Governance and scope errors, decoded](/insights/hubspot-app-governance-scope-errors/).
+
 *Checked against HubSpot's developer changelog and versioning documentation in October 2026. The helper is tested against the example error bodies in HubSpot's changelog.*
 
 Sources: [CRM API write validation enforcement (2026-09)](https://developers.hubspot.com/changelog/crm-api-write-validation-enforcement), [API versioning](https://developers.hubspot.com/docs/developer-tooling/platform/versioning), [Developer community thread](https://community.hubspot.com/t/breaking-change-crm-api-write-validation-enforcement-starting-with-the-2026-09-api-version/155819).
