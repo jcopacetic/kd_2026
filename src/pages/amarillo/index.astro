@@ -65,7 +65,7 @@ const faq = [
   <section class="section surface" aria-labelledby="svc-h">
     <div class="container">
       <div class="section-head"><span class="eyebrow">Services</span><h2 id="svc-h">What I do for local businesses</h2></div>
-      <div class="grid-2">
+      <div class="grid grid-2">
         {services.map((s) => (
           <div class="card">
             <h3><a class="stretched" href={s.href}>{s.name}</a></h3>
@@ -79,7 +79,7 @@ const faq = [
   <section class="section" id="plans" aria-labelledby="plans-h">
     <div class="container">
       <div class="section-head"><span class="eyebrow">Monthly plans</span><h2 id="plans-h">Simple monthly plans</h2><p class="lede">Month to month. Change or cancel any time.</p></div>
-      <div class="grid-3">
+      <div class="grid grid-3">
         {local.tiers.map((t) => (
           <div class={`price-card${'featured' in t && t.featured ? ' featured' : ''}`}>
             <h3>{t.name}</h3>
