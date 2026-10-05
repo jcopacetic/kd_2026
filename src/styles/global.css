@@ -203,6 +203,11 @@ p { margin: 0 0 1em; text-wrap: pretty; }
 .wide-figure figcaption { font-size: var(--kd-step--1); color: var(--kd-text-muted); margin-top: 0.6em; max-width: 42rem; }
 .prose img { border-radius: var(--kd-radius-md); border: 1px solid var(--kd-border-subtle); max-width: 100%; }
 .prose blockquote { margin: 1.5em 0; padding-left: 1.25em; border-left: 3px solid var(--kd-mint-300); color: var(--kd-text-muted); }
+/* Data tables outside articles (e.g. the KPI table on /amarillo/). */
+.table-wrap { max-width: 100%; overflow-x: auto; }
+.kpi-table { width: 100%; min-width: 34rem; border-collapse: collapse; font-size: var(--kd-step--1); }
+.kpi-table th, .kpi-table td { text-align: left; vertical-align: top; padding: var(--kd-space-3) var(--kd-space-4) var(--kd-space-3) 0; border-bottom: 1px solid var(--kd-border-subtle); }
+.kpi-table th { font-family: var(--kd-font-mono); font-weight: 500; font-size: 0.8em; letter-spacing: 0.06em; text-transform: uppercase; color: var(--kd-text-muted); }
 .prose table { border-collapse: collapse; width: 100%; max-width: 100%; font-size: var(--kd-step--1); display: block; overflow-x: auto; }
 .prose th, .prose td { border: 1px solid var(--kd-border-subtle); padding: 0.5em 0.75em; text-align: left; vertical-align: top; }
 .prose hr { border: 0; border-top: 1px solid var(--kd-border-subtle); margin: 2.5em 0; }

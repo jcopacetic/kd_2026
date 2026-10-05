@@ -77,17 +77,17 @@ export const local = {
     {
       name: 'Essentials', price: 299,
       for: 'Keep the website and Google listing healthy.',
-      includes: ['Hosting, security and updates', 'Uptime monitoring', 'Google Business Profile upkeep', '1 hour of changes a month', 'Quarterly check-in'],
+      includes: ['Hosting, security and updates', 'Uptime monitoring', 'Google Business Profile upkeep', '1 hour of changes a month', 'Quarterly health report and check-in'],
     },
     {
       name: 'Growth', price: 599, featured: true,
       for: 'Get found and get more calls from local search.',
-      includes: ['Everything in Essentials', 'Review requests and responses', 'Local SEO and listings cleanup', '1 local article or landing page a month', '3 hours of changes a month', 'Monthly report and call'],
+      includes: ['Everything in Essentials', 'Review requests and responses', 'Local SEO and listings cleanup', '1 local article or landing page a month', '3 hours of changes a month', 'Monthly results report and call'],
     },
     {
       name: 'Partner', price: 999,
       for: 'A web and marketing person who shows up in person.',
-      includes: ['Everything in Growth', 'A monthly on-site visit', 'Ads or email marketing management', '6 hours of changes a month', 'Priority, same-day response'],
+      includes: ['Everything in Growth', 'A monthly on-site visit', 'Ads or email marketing management', '6 hours of changes a month', 'Quarterly growth review: where to invest next', 'Priority, same-day response'],
     },
   ],
 } as const;

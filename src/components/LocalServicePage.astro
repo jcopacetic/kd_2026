@@ -20,6 +20,8 @@ interface Props {
   includes: { title: string; body: string }[];
   steps: { title: string; body: string }[];
   faq: { q: string; a: string }[];
+  /** The numbers this service is judged on (shown in the monthly report). */
+  measures: string[];
   pricingNote: string;
   schemaPrice?: { min: number; max?: number; unit?: string };
 }
@@ -64,7 +66,18 @@ const crumbs = [{ name: 'Home', path: '/' }, { name: 'Amarillo & Canyon', path: 
     </div>
   </section>
 
-  <section class="section surface" aria-labelledby="price-h">
+  <section class="section surface" aria-labelledby="measure-h">
+    <div class="container split">
+      <div>
+        <span class="eyebrow">Proof</span>
+        <h2 id="measure-h">What I measure</h2>
+        <p class="muted">Recorded at the start as a baseline, then reported every month next to what I did. <a href="/amarillo/#results">How reporting works</a>.</p>
+      </div>
+      <ul class="checks">{p.measures.map((x) => <li>{x}</li>)}</ul>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="price-h">
     <div class="container split">
       <div><span class="eyebrow">Pricing</span><h2 id="price-h">What it costs</h2></div>
       <div class="stack">
@@ -74,7 +87,7 @@ const crumbs = [{ name: 'Home', path: '/' }, { name: 'Amarillo & Canyon', path: 
     </div>
   </section>
 
-  <section class="section" aria-labelledby="faq-h">
+  <section class="section surface" aria-labelledby="faq-h">
     <div class="container">
       <div class="section-head"><span class="eyebrow">FAQ</span><h2 id="faq-h">Questions</h2></div>
       <FAQList items={p.faq} />

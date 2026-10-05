@@ -93,7 +93,34 @@ const faq = [
     </div>
   </section>
 
-  <section class="section surface" aria-labelledby="faq-h">
+  <section class="section surface" id="results" aria-labelledby="results-h">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Proof</span>
+        <h2 id="results-h">How you’ll know it’s working</h2>
+        <p class="lede">Before I change anything, I record where you stand. Then every report shows the same numbers against that starting point, so you can see what moved and what I did to move it.</p>
+      </div>
+      <div class="table-wrap">
+        <table class="kpi-table">
+          <thead><tr><th>What I track</th><th>Where it comes from</th><th>What it tells you</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Leads:</strong> calls, form submissions, messages, direction requests</td><td>Your Google listing and website analytics</td><td>Whether people are contacting you, and from where</td></tr>
+            <tr><td><strong>New customers</strong> from those leads</td><td>You, plus a “how did you hear about us” question on your forms</td><td>Whether the leads turn into work</td></tr>
+            <tr><td><strong>Visibility:</strong> views, searches and the search terms people used</td><td>Google Business Profile and Google Search Console</td><td>Whether more of the right people are finding you</td></tr>
+            <tr><td><strong>Reputation:</strong> new reviews, average rating, replies</td><td>Your Google listing</td><td>What people see before they call</td></tr>
+            <tr><td><strong>Site health:</strong> uptime, speed, updates, backups</td><td>Monitoring and maintenance logs</td><td>That the basics are being looked after</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="grid grid-3" style="margin-top:var(--kd-space-8)">
+        <div class="card"><h3>Every report answers three questions</h3><p>What happened, what I did, and what I recommend next. One page, plain English, with the numbers next to last month and your starting point.</p></div>
+        <div class="card"><h3>The data is yours</h3><p>Google Analytics, Search Console and your Google listing are set up in your business’s accounts, so the history stays with you whoever does the work.</p></div>
+        <div class="card"><h3>Numbers that point somewhere</h3><p>Plenty of views but few calls points to the listing or the site. Calls but few customers points to follow-up. Each report ends with the next best place to spend time or money.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="faq-h">
     <div class="container">
       <div class="section-head"><span class="eyebrow">FAQ</span><h2 id="faq-h">Questions local businesses ask</h2></div>
       <FAQList items={faq} />
