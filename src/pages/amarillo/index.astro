@@ -5,6 +5,7 @@ import FAQList from '../../components/FAQList.astro';
 import ContactForm from '../../components/ContactForm.astro';
 import { local, site } from '../../data/site';
 import { service, ids, localAreas, itemList } from '../../lib/schema';
+import { getPublishedPosts } from '../../lib/posts';
 
 const path = '/amarillo/';
 const crumbs = [{ name: 'Home', path: '/' }, { name: 'Amarillo & Canyon', path }];
@@ -15,6 +16,9 @@ const services = [
   { name: 'Local SEO', href: '/amarillo/local-seo/', body: 'Listings that agree with each other, pages that answer what locals search, and honest reporting.' },
   { name: 'Website rescue', href: '/amarillo/agency-closed/', body: 'Your web company closed or stopped answering? I’ll help you get your domain, site and logins back.' },
 ];
+const guides = (await getPublishedPosts(({ data }) => data.pillar === 'website'))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 6);
 const faq = [
   { q: 'Do I have to sign a long contract?', a: 'No. Monthly plans run month to month. If you leave, you take everything with you: domain, website, Google listing and every login.' },
   { q: 'Who owns my website and domain?', a: 'You do. Your domain is registered in your business’s name, and you get admin access to the site, hosting and Google accounts. I never hold anything hostage.' },
@@ -120,7 +124,23 @@ const faq = [
     </div>
   </section>
 
-  <section class="section" aria-labelledby="faq-h">
+  {guides.length > 0 && (
+    <section class="section" aria-labelledby="guides-h">
+      <div class="container">
+        <div class="section-head"><span class="eyebrow">Guides</span><h2 id="guides-h">Guides for local business owners</h2></div>
+        <div class="grid grid-2">
+          {guides.map((g) => (
+            <div class="card">
+              <h3 style="font-size:var(--kd-step-1)"><a class="stretched" href={`/insights/${g.id}/`}>{g.data.title}</a></h3>
+              <p class="muted">{g.data.description}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section class="section surface" aria-labelledby="faq-h">
     <div class="container">
       <div class="section-head"><span class="eyebrow">FAQ</span><h2 id="faq-h">Questions local businesses ask</h2></div>
       <FAQList items={faq} />
