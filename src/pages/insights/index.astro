@@ -1,12 +1,12 @@
 ---
-import { getCollection } from 'astro:content';
+import { getPublishedPosts } from '../../lib/posts';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHero from '../../components/PageHero.astro';
 import AuditCTA from '../../components/AuditCTA.astro';
 import { pillarLabel } from '../../data/site';
 import { blog, itemList, ids } from '../../lib/schema';
 const crumbs = [{ name: 'Home', path: '/' }, { name: 'Insights', path: '/insights/' }];
-const posts = (await getCollection('insights', ({ data }) => !data.draft)).sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+const posts = (await getPublishedPosts()).sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 const list = itemList('/insights/', posts.map((p) => ({ name: p.data.title, path: `/insights/${p.id}/`, id: ids.article(`/insights/${p.id}/`) })));
 const fmt = (d: Date) => d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric', timeZone: 'UTC' });
 ---

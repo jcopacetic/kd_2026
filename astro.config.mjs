@@ -49,6 +49,9 @@ export default defineConfig({
       TURNSTILE_SECRET_KEY: envField.string({ context: 'server', access: 'secret', optional: true }),
       // Public (it's in the page HTML anyway). Read at build time, so redeploy after changing it.
       TURNSTILE_SITE_KEY: envField.string({ context: 'server', access: 'public', optional: true }),
+      // Scheduled publishing (vercel.json crons → /api/publish → Vercel deploy hook).
+      CRON_SECRET: envField.string({ context: 'server', access: 'secret', optional: true }),
+      DEPLOY_HOOK_URL: envField.string({ context: 'server', access: 'secret', optional: true }),
     },
   },
   // Content-Security-Policy. Astro hashes every script and stylesheet it renders and emits a

@@ -1,13 +1,13 @@
 // Prerendered share images: /og/home.png, /og/services/revops.png, /og/insights/<slug>.png …
 import type { APIRoute, GetStaticPaths } from 'astro';
-import { getCollection } from 'astro:content';
+import { getPublishedPosts } from '../../lib/posts';
 import { renderOgImage } from '../../lib/og';
 import { ogPages, ogImagePath } from '../../data/og';
 import { pillarLabel } from '../../data/site';
 
 export const getStaticPaths = (async () => {
   const pages = Object.entries(ogPages).map(([path, card]) => ({ path, card }));
-  const posts = (await getCollection('insights', ({ data }) => !data.draft)).map((p) => ({
+  const posts = (await getPublishedPosts()).map((p) => ({
     path: `/insights/${p.id}/`,
     card: { title: p.data.title, eyebrow: `${p.data.kind === 'guide' ? 'Guide' : 'Insights'} · ${pillarLabel[p.data.pillar]}` },
   }));

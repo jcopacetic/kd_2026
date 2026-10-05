@@ -1,7 +1,7 @@
 // WebP versions of post covers for use inside articles (the PNG stays for social cards):
 // /og/insights/<slug>-800.webp and -1200.webp.
 import type { APIRoute, GetStaticPaths } from 'astro';
-import { getCollection } from 'astro:content';
+import { getPublishedPosts } from '../../lib/posts';
 import sharp from 'sharp';
 import { renderOgImage } from '../../lib/og';
 import { pillarLabel } from '../../data/site';
@@ -9,7 +9,7 @@ import { pillarLabel } from '../../data/site';
 export const COVER_WIDTHS = [800, 1200] as const;
 
 export const getStaticPaths = (async () => {
-  const posts = await getCollection('insights', ({ data }) => !data.draft);
+  const posts = await getPublishedPosts();
   return posts.flatMap((p) =>
     COVER_WIDTHS.map((width) => ({
       params: { route: `insights/${p.id}-${width}` },

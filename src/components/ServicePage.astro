@@ -1,5 +1,5 @@
 ---
-import { getCollection } from 'astro:content';
+import { getPublishedPosts } from '../lib/posts';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHero from './PageHero.astro';
 import FAQList from './FAQList.astro';
@@ -27,7 +27,7 @@ interface Props {
 const p = Astro.props;
 const meta = pillars[p.pillar];
 const crumbs = [{ name: 'Home', path: '/' }, { name: 'Services', path: '/services/' }, { name: meta.name, path: meta.href }];
-const related = (await getCollection('insights', ({ data }) => !data.draft && data.pillar === p.pillar))
+const related = (await getPublishedPosts(({ data }) => data.pillar === p.pillar))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
   .slice(0, 4);
 ---

@@ -1,4 +1,5 @@
 ---
+import { getPublishedPosts } from '../lib/posts';
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ProofStrip from '../components/ProofStrip.astro';
@@ -11,7 +12,7 @@ import { Image } from 'astro:assets';
 import portrait from '../assets/photos/jonathan-sumner-about-portrait.png';
 
 const flagship = (await getCollection('work')).find((w) => w.id === 'ai-startup-application-portal');
-const latest = (await getCollection('insights', ({ data }) => !data.draft))
+const latest = (await getPublishedPosts())
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
   .slice(0, 3);
 ---

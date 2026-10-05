@@ -1,5 +1,6 @@
 ---
-import { getCollection, render } from 'astro:content';
+import { getPublishedPosts } from '../../lib/posts';
+import { render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import { article, blog, ids } from '../../lib/schema';
@@ -7,7 +8,7 @@ import { pillars, pillarLabel, prices, site } from '../../data/site';
 import { ogImagePath } from '../../data/og';
 
 export async function getStaticPaths() {
-  const posts = await getCollection('insights', ({ data }) => !data.draft);
+  const posts = await getPublishedPosts();
   return posts.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
 }
 const { entry } = Astro.props;
@@ -24,7 +25,7 @@ const section = pillarLabel[d.pillar];
 const coverAlt = `Title card: ${d.title}`;
 const fmt = (date: Date) => date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' });
 const pillar = d.pillar === 'website' ? null : pillars[d.pillar];
-const related = (await getCollection('insights', ({ data, id }) => !data.draft && id !== entry.id && data.pillar === d.pillar)).slice(0, 3);
+const related = (await getPublishedPosts(({ data, id }) => id !== entry.id && data.pillar === d.pillar)).slice(0, 3);
 ---
 <BaseLayout
   title={d.seoTitle ?? (d.title.length <= 42 ? `${d.title} | Khaotic Digital` : d.title)}

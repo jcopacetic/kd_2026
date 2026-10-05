@@ -9,7 +9,8 @@
     "preview": "astro preview",
     "check": "astro check",
     "migrate": "node scripts/migrate-posts.mjs",
-    "check:seo": "python3 scripts/check-seo.py"
+    "check:seo": "python3 scripts/check-seo.py",
+    "schedule": "node scripts/schedule.mjs"
   },
   "dependencies": {
     "@astrojs/mdx": "^8.0.2",
