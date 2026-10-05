@@ -68,6 +68,30 @@ export const prices = {
   hourlyFrom: '$150/hr',
 };
 
+/** Local (Amarillo / Canyon) offer. Shown only on /amarillo/ pages, never next to national pricing. */
+export const local = {
+  hourly: '$95/hr',
+  areas: ['Amarillo', 'Canyon'],
+  region: 'Texas Panhandle',
+  tiers: [
+    {
+      name: 'Essentials', price: 299,
+      for: 'Keep the website and Google listing healthy.',
+      includes: ['Hosting, security and updates', 'Uptime monitoring', 'Google Business Profile upkeep', '1 hour of changes a month', 'Quarterly check-in'],
+    },
+    {
+      name: 'Growth', price: 599, featured: true,
+      for: 'Get found and get more calls from local search.',
+      includes: ['Everything in Essentials', 'Review requests and responses', 'Local SEO and listings cleanup', '1 local article or landing page a month', '3 hours of changes a month', 'Monthly report and call'],
+    },
+    {
+      name: 'Partner', price: 999,
+      for: 'A web and marketing person who shows up in person.',
+      includes: ['Everything in Growth', 'A monthly on-site visit', 'Ads or email marketing management', '6 hours of changes a month', 'Priority, same-day response'],
+    },
+  ],
+} as const;
+
 export type Pillar = 'revops' | 'ai-crm' | 'build' | 'website';
 
 export const pillars: Record<Exclude<Pillar, 'website'>, { name: string; tagline: string; href: string; icon: string; problem: string }> = {

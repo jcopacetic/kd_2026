@@ -19,6 +19,7 @@ const INTENT_LABEL: Record<string, string> = {
   audit: 'Systems Audit request',
   'website-audit': 'Website Audit request',
   contact: 'Contact form',
+  local: 'Local (Amarillo/Canyon) inquiry',
 };
 
 /** Submissions faster than this after the page rendered are almost always bots. */

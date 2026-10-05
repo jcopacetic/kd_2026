@@ -1,0 +1,113 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import FAQList from '../../components/FAQList.astro';
+import ContactForm from '../../components/ContactForm.astro';
+import { local, site } from '../../data/site';
+import { service, ids, localAreas, itemList } from '../../lib/schema';
+
+const path = '/amarillo/';
+const crumbs = [{ name: 'Home', path: '/' }, { name: 'Amarillo & Canyon', path }];
+const description = 'Websites, Google Business Profile and local search for Amarillo and Canyon businesses. Monthly plans from $299, in-person visits, and you own everything.';
+const services = [
+  { name: 'Websites', href: '/amarillo/websites/', body: 'New sites, rebuilds of old ones, and care plans that keep them fast, secure and up to date.' },
+  { name: 'Google Business Profile', href: '/amarillo/google-business-profile/', body: 'Set up or clean up your listing so you show on the map when people search nearby.' },
+  { name: 'Local SEO', href: '/amarillo/local-seo/', body: 'Listings that agree with each other, pages that answer what locals search, and honest reporting.' },
+  { name: 'Website rescue', href: '/amarillo/agency-closed/', body: 'Your web company closed or stopped answering? I’ll help you get your domain, site and logins back.' },
+];
+const faq = [
+  { q: 'Do I have to sign a long contract?', a: 'No. Monthly plans run month to month. If you leave, you take everything with you: domain, website, Google listing and every login.' },
+  { q: 'Who owns my website and domain?', a: 'You do. Your domain is registered in your business’s name, and you get admin access to the site, hosting and Google accounts. I never hold anything hostage.' },
+  { q: 'Will I work with you or with a junior?', a: 'With me. I’m one engineer, not a team of trainees, so the person you talk to is the person doing the work.' },
+  { q: 'Can you come to my office?', a: `Yes. Visits in Amarillo and Canyon are included. The Partner plan includes a regular monthly visit; on the other plans and hourly work, I come by when it’s useful.` },
+  { q: 'What if I just need one thing fixed?', a: `That’s fine. One-off work is ${local.hourly}, or a fixed quote for anything bigger, with no plan required.` },
+  { q: 'Do you work outside Amarillo and Canyon?', a: 'Yes, across the Texas Panhandle. Amarillo and Canyon are where I’m based and visit most often; for other towns, ask and we’ll work out visits.' },
+];
+---
+<BaseLayout
+  title="Websites & Local SEO for Amarillo & Canyon Businesses"
+  description={description}
+  crumbs={crumbs}
+  faq={faq}
+  about={ids.service(path)}
+  schema={[
+    service({ name: 'Local websites and online presence', path, description, serviceType: 'Website management, Google Business Profile and local SEO', price: { min: local.tiers[0].price, unit: 'MON' }, areaServed: localAreas, audience: 'Local small businesses' }),
+    itemList(path, services.map((s) => ({ name: s.name, path: s.href }))),
+  ]}
+>
+  <PageHero crumbs={crumbs} eyebrow="Local · Amarillo & Canyon" title="Websites, Google and local search for Amarillo and Canyon businesses.">
+    <p class="lede">From an engineer who builds this for a living, works with you directly, and comes by in person when it helps. You own everything, and plans start at ${local.tiers[0].price} a month.</p>
+    <div class="btn-row">
+      <a class="btn btn-primary" href="#talk">Talk to me</a>
+      <a class="btn btn-secondary" href="#plans">See monthly plans</a>
+    </div>
+  </PageHero>
+
+  <section class="section" aria-labelledby="why-h">
+    <div class="container split">
+      <div>
+        <span class="eyebrow">Why me</span>
+        <h2 id="why-h">A senior engineer, not a room full of trainees.</h2>
+      </div>
+      <div class="stack">
+        <p>I’ve been building websites since 2004, much of it here in Amarillo, including time inside several local web companies. I’ve watched a lot of them close, and I’ve seen what that leaves behind: businesses that can’t log in to their own website, domains registered to a company that no longer exists, and Google listings nobody can edit.</p>
+        <p>So I work differently. You deal with me directly, your accounts are in your name from day one, and the tools are current: fast, secure sites, honest reporting, and no long contracts.</p>
+        <ul class="checks">
+          <li><strong>You own it all.</strong> Domain, website, hosting and Google accounts are in your name.</li>
+          <li><strong>One person, accountable.</strong> No account managers, no hand-offs.</li>
+          <li><strong>In person when it helps.</strong> Visits in Amarillo and Canyon are included.</li>
+          <li><strong>Month to month.</strong> Stay because it’s working.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section surface" aria-labelledby="svc-h">
+    <div class="container">
+      <div class="section-head"><span class="eyebrow">Services</span><h2 id="svc-h">What I do for local businesses</h2></div>
+      <div class="grid-2">
+        {services.map((s) => (
+          <div class="card">
+            <h3><a class="stretched" href={s.href}>{s.name}</a></h3>
+            <p>{s.body}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="plans" aria-labelledby="plans-h">
+    <div class="container">
+      <div class="section-head"><span class="eyebrow">Monthly plans</span><h2 id="plans-h">Simple monthly plans</h2><p class="lede">Month to month. Change or cancel any time.</p></div>
+      <div class="grid-3">
+        {local.tiers.map((t) => (
+          <div class={`price-card${'featured' in t && t.featured ? ' featured' : ''}`}>
+            <h3>{t.name}</h3>
+            <div class="amount"><small>per month</small>${t.price}</div>
+            <p class="muted">{t.for}</p>
+            <ul class="checks">{t.includes.map((i) => <li>{i}</li>)}</ul>
+          </div>
+        ))}
+      </div>
+      <p class="muted" style="margin-top:var(--kd-space-6)">Need one thing done, or a new website? One-off work is {local.hourly}, and website builds get a fixed quote after we talk. Want an outside opinion first? The <a href="/audit/website/">Website &amp; Presence Audit</a> reviews your site, listings and lead capture and ranks the fixes.</p>
+    </div>
+  </section>
+
+  <section class="section surface" aria-labelledby="faq-h">
+    <div class="container">
+      <div class="section-head"><span class="eyebrow">FAQ</span><h2 id="faq-h">Questions local businesses ask</h2></div>
+      <FAQList items={faq} />
+    </div>
+  </section>
+
+  <section class="section on-ink pattern-strokes" id="talk" aria-labelledby="talk-h">
+    <div class="container split">
+      <div>
+        <span class="eyebrow"><span class="dot"></span>Amarillo &amp; Canyon</span>
+        <h2 id="talk-h">Tell me what your business needs</h2>
+        <p class="lede">I’ll reply within {site.replyTime}. Happy to meet at your office or over coffee.</p>
+      </div>
+      <div class="card" style="background:var(--kd-bg)"><ContactForm intent="local" /></div>
+    </div>
+  </section>
+</BaseLayout>

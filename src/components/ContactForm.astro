@@ -3,13 +3,14 @@
 // redirects to /contact/thanks/); with JS it submits in place and fires GA4 events.
 import { site } from '../data/site';
 import { TURNSTILE_SITE_KEY } from 'astro:env/server';
-interface Props { intent?: 'audit' | 'website-audit' | 'contact' }
+interface Props { intent?: 'audit' | 'website-audit' | 'contact' | 'local' }
 const { intent = 'contact' } = Astro.props;
 const uid = `f-${intent}`;
 const messageLabel = {
   audit: 'What’s not working? Which tools are in your stack?',
   'website-audit': 'What do you want the site to do better?',
   contact: 'How can I help?',
+  local: 'What does your business need? Your website address helps if you have one.',
 }[intent];
 ---
 <form class="form" method="post" action="/api/contact/" data-contact-form data-intent={intent}>

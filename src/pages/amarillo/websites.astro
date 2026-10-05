@@ -1,0 +1,41 @@
+---
+import LocalServicePage from '../../components/LocalServicePage.astro';
+import { local } from '../../data/site';
+---
+<LocalServicePage
+  path="/amarillo/websites/"
+  name="Websites for Amarillo businesses"
+  seoTitle="Website Design & Care for Amarillo Businesses"
+  description="Websites for Amarillo and Canyon businesses: new builds, rebuilds of dated sites, and monthly care plans. You own the domain and every login."
+  eyebrow="Local · Websites"
+  h1="Websites you own, built and looked after locally."
+  lede="New sites, rebuilds of dated ones, and monthly care that keeps them fast, secure and current, from an engineer in Amarillo."
+  problems={[
+    'The site looks like it was built ten years ago, because it was.',
+    'It’s slow on phones, and most of your visitors are on phones.',
+    'Changing your hours or adding a service means waiting days for someone else.',
+    'You’re not sure who has the logins, or whether the domain is in your name.',
+    'Forms go somewhere, but nobody is sure where.',
+  ]}
+  includes={[
+    { title: 'A site built for phones first', body: 'Fast pages, clear calls to action, and click-to-call where it matters. Built on current, well-supported tools, not a custom setup only one person can edit.' },
+    { title: 'Content that answers local questions', body: 'Pages for each service you offer, the areas you cover, your hours and how to reach you, written so people and search engines both understand them.' },
+    { title: 'Everything in your name', body: 'Your domain, hosting, analytics and Google accounts are registered to your business, with admin access for you, from day one.' },
+    { title: 'Forms that reach a person', body: 'Contact and quote forms that land in the right inbox, with spam protection, so leads stop disappearing.' },
+    { title: 'Care after launch', body: 'Updates, security, backups and small changes each month on a care plan, so the site doesn’t slowly fall apart.' },
+    { title: 'Tracking you can read', body: 'Simple reporting on visits, calls and form submissions, so you can tell whether the site is earning its keep.' },
+  ]}
+  steps={[
+    { title: 'Talk', body: 'A conversation, in person if you like, about what the business needs the site to do.' },
+    { title: 'Fixed quote', body: 'A written scope and a fixed price before any work starts.' },
+    { title: 'Build and review', body: 'You see it before launch and can ask for changes.' },
+    { title: 'Launch and look after', body: 'Go live, then keep it current on a monthly plan or hourly as needed.' },
+  ]}
+  pricingNote="New websites and rebuilds get a fixed quote after we talk, because a three-page site for a contractor and a site with booking or online payments are very different jobs."
+  faq={[
+    { q: 'How much does a website cost?', a: 'It depends on the size and what it has to do, so I quote it fixed after a conversation. Once it’s live, keeping it updated and secure is part of the monthly plans, which start at $' + local.tiers[0].price + ' a month.' },
+    { q: 'Can you fix my current site instead of rebuilding it?', a: 'Often, yes. If the foundation is sound, updating it is cheaper than starting over. I’ll tell you honestly which makes sense.' },
+    { q: 'Can I edit the site myself?', a: 'Yes. You get access and a short walkthrough. Many owners still prefer to send changes to me, which is what the monthly hours are for.' },
+    { q: 'What happens if I stop the monthly plan?', a: 'You keep the website and everything else. It’s all in your name, and I’ll help move it to whoever looks after it next.' },
+  ]}
+/>

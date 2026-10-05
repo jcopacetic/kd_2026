@@ -1,0 +1,94 @@
+---
+// Layout for the /amarillo/ service pages. Local pricing and audience only; never linked from the
+// national navigation (see site-content/11).
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from './PageHero.astro';
+import FAQList from './FAQList.astro';
+import ContactForm from './ContactForm.astro';
+import { local, site } from '../data/site';
+import { service, ids, localAreas } from '../lib/schema';
+
+interface Props {
+  path: string;
+  name: string;
+  seoTitle: string;
+  description: string;
+  eyebrow: string;
+  h1: string;
+  lede: string;
+  problems: string[];
+  includes: { title: string; body: string }[];
+  steps: { title: string; body: string }[];
+  faq: { q: string; a: string }[];
+  pricingNote: string;
+  schemaPrice?: { min: number; max?: number; unit?: string };
+}
+const p = Astro.props;
+const crumbs = [{ name: 'Home', path: '/' }, { name: 'Amarillo & Canyon', path: '/amarillo/' }, { name: p.name, path: p.path }];
+---
+<BaseLayout
+  title={p.seoTitle}
+  description={p.description}
+  crumbs={crumbs}
+  faq={p.faq}
+  about={ids.service(p.path)}
+  schema={[service({ name: p.name, path: p.path, description: p.description, price: p.schemaPrice, areaServed: localAreas, audience: 'Local small businesses' })]}
+>
+  <PageHero crumbs={crumbs} eyebrow={p.eyebrow} title={p.h1} lede={p.lede}>
+    <div class="btn-row">
+      <a class="btn btn-primary" href="#talk">Talk to me about it</a>
+      <a class="btn btn-secondary" href="/amarillo/#plans">See monthly plans</a>
+    </div>
+  </PageHero>
+
+  <section class="section" aria-labelledby="problems-h">
+    <div class="container split">
+      <div><span class="eyebrow">Sound familiar?</span><h2 id="problems-h">What I hear from local businesses</h2></div>
+      <ul class="checks">{p.problems.map((x) => <li>{x}</li>)}</ul>
+    </div>
+  </section>
+
+  <section class="section surface" aria-labelledby="inc-h">
+    <div class="container">
+      <div class="section-head"><span class="eyebrow">What you get</span><h2 id="inc-h">What’s included</h2></div>
+      <div class="grid-3">
+        {p.includes.map((x) => <div class="card"><h3>{x.title}</h3><p>{x.body}</p></div>)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="steps-h">
+    <div class="container">
+      <div class="section-head"><span class="eyebrow">How it works</span><h2 id="steps-h">How we’d start</h2></div>
+      <ol class="steps steps-row">{p.steps.map((s) => <li><h3>{s.title}</h3><p>{s.body}</p></li>)}</ol>
+    </div>
+  </section>
+
+  <section class="section surface" aria-labelledby="price-h">
+    <div class="container split">
+      <div><span class="eyebrow">Pricing</span><h2 id="price-h">What it costs</h2></div>
+      <div class="stack">
+        <p>{p.pricingNote}</p>
+        <p>Monthly plans start at ${local.tiers[0].price}/month, and one-off work is {local.hourly} or a fixed quote. Visits in Amarillo and Canyon are included. <a href="/amarillo/#plans">Compare the plans</a>.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="faq-h">
+    <div class="container">
+      <div class="section-head"><span class="eyebrow">FAQ</span><h2 id="faq-h">Questions</h2></div>
+      <FAQList items={p.faq} />
+    </div>
+  </section>
+
+  <section class="section on-ink pattern-strokes" id="talk" aria-labelledby="talk-h">
+    <div class="container split">
+      <div>
+        <span class="eyebrow"><span class="dot"></span>Amarillo &amp; Canyon</span>
+        <h2 id="talk-h">Tell me what your business needs</h2>
+        <p class="lede">I’ll reply within {site.replyTime}, and I’m glad to come by in person.</p>
+      </div>
+      <div class="card" style="background:var(--kd-bg)"><ContactForm intent="local" /></div>
+    </div>
+  </section>
+</BaseLayout>

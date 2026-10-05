@@ -17,6 +17,11 @@ export const ogPages: Record<string, { title: string; eyebrow: string; photo?: s
   '/about/': { title: 'I’m a developer, not a salesperson', eyebrow: 'About Jonathan Sumner', photo: 'src/assets/photos/og-cutout.png' },
   '/faq/': { title: 'Straight answers', eyebrow: 'FAQ' },
   '/contact/': { title: 'Talk to the person who writes the code', eyebrow: 'Contact' },
+  '/amarillo/': { title: 'Websites and local search for Amarillo and Canyon businesses', eyebrow: 'Local · Amarillo & Canyon' },
+  '/amarillo/websites/': { title: 'Websites you own, built and looked after locally', eyebrow: 'Local · Websites' },
+  '/amarillo/google-business-profile/': { title: 'Show up on the map when people search nearby', eyebrow: 'Local · Google Business Profile' },
+  '/amarillo/local-seo/': { title: 'Get found by people searching in Amarillo', eyebrow: 'Local · Local SEO' },
+  '/amarillo/agency-closed/': { title: 'Your web company closed. Let’s get your site back.', eyebrow: 'Local · Website rescue' },
 };
 
 /** /services/revops/ → /og/services/revops.png ; / → /og/home.png */

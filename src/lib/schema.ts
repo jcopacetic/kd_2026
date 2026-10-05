@@ -174,12 +174,22 @@ export function primaryImage(path: string, image: string, caption: string) {
   };
 }
 
+/** Where the local (/amarillo/) services are offered. */
+export const localAreas = [
+  { '@type': 'City', name: 'Amarillo', containedInPlace: { '@type': 'State', name: 'Texas' } },
+  { '@type': 'City', name: 'Canyon', containedInPlace: { '@type': 'State', name: 'Texas' } },
+  { '@type': 'AdministrativeArea', name: 'Texas Panhandle' },
+];
+
 export function service(opts: {
   name: string;
   path: string;
   description: string;
   serviceType?: string;
   price?: { min: number; max?: number; unit?: string };
+  /** Defaults to the US-wide B2B service; local pages pass their own cities and audience. */
+  areaServed?: object | object[];
+  audience?: string;
 }) {
   return {
     '@type': 'Service',
@@ -189,8 +199,8 @@ export function service(opts: {
     url: abs(opts.path),
     description: opts.description,
     provider: { '@id': ids.org },
-    areaServed: { '@type': 'Country', name: 'United States' },
-    audience: { '@type': 'BusinessAudience', audienceType: 'B2B companies' },
+    areaServed: opts.areaServed ?? { '@type': 'Country', name: 'United States' },
+    audience: { '@type': 'BusinessAudience', audienceType: opts.audience ?? 'B2B companies' },
     mainEntityOfPage: { '@id': ids.page(opts.path) },
     ...(opts.price
       ? {
